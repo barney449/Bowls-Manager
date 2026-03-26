@@ -1,0 +1,5 @@
+{
+  "name": "Bowls Team Manager",
+  "description": "A comprehensive team management system for Lawn Bowls, replacing complex spreadsheets with a modern React interface for tracking matches, player availability, and results.",
+  "requestFramePermissions": []
+}
