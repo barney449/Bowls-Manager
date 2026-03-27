@@ -290,8 +290,8 @@
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": null,
-            "availability": "Yes"
+            "playerId": "7",
+            "availability": "Unset"
           }
         ],
         "pointsFor": "",
