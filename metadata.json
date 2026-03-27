@@ -112,7 +112,17 @@
       "password": "password"
     }
   ],
-  "chatMessages": [],
+  "chatMessages": [
+    {
+      "scorecardId": "sc-1774634703764-0.7826892806282152",
+      "playerId": "2",
+      "playerName": "Gary Stubbs",
+      "text": "when are you playing",
+      "interpretedDate": null,
+      "id": "msg-1774634744109-m3x42j2of",
+      "timestamp": "2026-03-27T18:05:44.109Z"
+    }
+  ],
   "matches": [
     {
       "id": "match-1773985902953",
