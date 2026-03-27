@@ -280,7 +280,7 @@
       "id": "sc-1774634703764-0.7826892806282152",
       "competition": "Club Champs",
       "selectedType": "Singles",
-      "playByDate": "",
+      "playByDate": "2026-03-31",
       "agreedPlayDate": "",
       "startTime": "",
       "isHome": true,
@@ -310,7 +310,8 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": true
+      "isNew": true,
+      "isEditing": true
     }
   ]
 }
