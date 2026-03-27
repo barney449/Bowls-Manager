@@ -275,5 +275,42 @@
     }
   ],
   "databaseMatches": [],
-  "scorecards": []
+  "scorecards": [
+    {
+      "id": "sc-1774634703764-0.7826892806282152",
+      "competition": "Club Champs",
+      "selectedType": "Singles",
+      "playByDate": "",
+      "agreedPlayDate": "",
+      "startTime": "",
+      "isHome": true,
+      "teamA": {
+        "id": "cc-1774634703764-A-0.7029388326211823",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": null,
+            "availability": "Yes"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "teamB": {
+        "id": "cc-1774634703764-B-0.8810902694650522",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": null,
+            "availability": "Yes"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "isNew": true
+    }
+  ]
 }
