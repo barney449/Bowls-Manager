@@ -310,8 +310,8 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": true,
-      "isEditing": true
+      "isNew": false,
+      "isEditing": false
     }
   ]
 }
