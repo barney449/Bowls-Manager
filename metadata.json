@@ -1,5 +1,279 @@
 {
   "name": "Bowls Team Manager",
   "description": "A comprehensive team management system for Lawn Bowls, replacing complex spreadsheets with a modern React interface for tracking matches, player availability, and results.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "players": [
+    {
+      "id": "1",
+      "name": "Jacob Inch",
+      "avatarUrl": "https://picsum.photos/seed/jacob/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "jacob@example.com",
+      "password": "password"
+    },
+    {
+      "id": "2",
+      "name": "Gary Stubbs",
+      "avatarUrl": "https://picsum.photos/seed/gary/100/100",
+      "role": "Admin",
+      "isApproved": true,
+      "email": "gary@example.com",
+      "password": "password"
+    },
+    {
+      "id": "3",
+      "name": "Ian Boulton",
+      "avatarUrl": "https://picsum.photos/seed/ian/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "ian@example.com",
+      "password": "password"
+    },
+    {
+      "id": "4",
+      "name": "Paul Morriss",
+      "avatarUrl": "https://picsum.photos/seed/paul/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "paul@example.com",
+      "password": "password"
+    },
+    {
+      "id": "5",
+      "name": "Sean Thompson",
+      "avatarUrl": "https://picsum.photos/seed/sean/100/100",
+      "role": "Admin Editor",
+      "isApproved": true,
+      "email": "sean@example.com",
+      "password": "password"
+    },
+    {
+      "id": "6",
+      "name": "Pete Molloy",
+      "avatarUrl": "https://picsum.photos/seed/pete/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "pete@example.com",
+      "password": "password"
+    },
+    {
+      "id": "7",
+      "name": "Les Inch",
+      "avatarUrl": "https://picsum.photos/seed/les/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "les@example.com",
+      "password": "password"
+    },
+    {
+      "id": "8",
+      "name": "Nick Inch",
+      "avatarUrl": "https://picsum.photos/seed/nick/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "nick@example.com",
+      "password": "password"
+    },
+    {
+      "id": "9",
+      "name": "Brent Bowers",
+      "avatarUrl": "https://picsum.photos/seed/brent/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "brent@example.com",
+      "password": "password"
+    },
+    {
+      "id": "10",
+      "name": "Pete Riley",
+      "avatarUrl": "https://picsum.photos/seed/riley/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "riley@example.com",
+      "password": "password"
+    },
+    {
+      "id": "11",
+      "name": "Dave Gillespie",
+      "avatarUrl": "https://picsum.photos/seed/dave/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "dave@example.com",
+      "password": "password"
+    },
+    {
+      "id": "12",
+      "name": "Grant Traill",
+      "avatarUrl": "https://picsum.photos/seed/grant/100/100",
+      "role": "Active Member",
+      "isApproved": true,
+      "email": "grant@example.com",
+      "password": "password"
+    }
+  ],
+  "chatMessages": [],
+  "matches": [
+    {
+      "id": "match-1773985902953",
+      "date": "2026-03-20",
+      "time": "08:30",
+      "venue": "Papanui Club",
+      "isHome": false,
+      "competition": "New Competition",
+      "opponent": "TBD",
+      "disciplines": [
+        {
+          "id": "disc-1773986025091-0.37832290919732703",
+          "type": "Singles",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": "2",
+              "availability": "Unset",
+              "positionName": "Marker/Player"
+            }
+          ],
+          "pointsAgainst": ""
+        }
+      ],
+      "lastEmailSent": "2026-03-20T05:54:09.368Z",
+      "selector1Id": "",
+      "selector2Id": "",
+      "selector1Picks": [
+        {
+          "id": "disc-1773986025091-0.7668837849266782",
+          "type": "Singles",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": null,
+              "availability": "Unset",
+              "positionName": "Marker/Player"
+            }
+          ],
+          "pointsAgainst": ""
+        }
+      ],
+      "selector2Picks": [
+        {
+          "id": "disc-1773986025091-0.5062045912016614",
+          "type": "Singles",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": null,
+              "availability": "Unset",
+              "positionName": "Marker/Player"
+            }
+          ],
+          "pointsAgainst": ""
+        }
+      ],
+      "isConfirmed": false,
+      "created_at": "2026-03-20T08:19:36.04476+00:00"
+    },
+    {
+      "id": "match-1",
+      "date": "2026-01-31",
+      "time": "08:30",
+      "venue": "Papanui Club",
+      "isHome": false,
+      "competition": "Premier Men's Watson Shield",
+      "opponent": "Papanui Club",
+      "disciplines": [
+        {
+          "id": "d1",
+          "type": "Singles",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": "1",
+              "availability": "Yes",
+              "positionName": "Singles"
+            }
+          ],
+          "pointsAgainst": ""
+        },
+        {
+          "id": "d2",
+          "type": "Pairs",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": "2",
+              "availability": "Yes",
+              "positionName": "Lead"
+            },
+            {
+              "playerId": "5",
+              "availability": "Yes",
+              "positionName": "Skip"
+            }
+          ],
+          "pointsAgainst": ""
+        },
+        {
+          "id": "d3",
+          "type": "Triples",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": "3",
+              "availability": "Yes",
+              "positionName": "Lead"
+            },
+            {
+              "playerId": "9",
+              "availability": "Yes",
+              "positionName": "2nd"
+            },
+            {
+              "playerId": "6",
+              "availability": "Yes",
+              "positionName": "Skip"
+            }
+          ],
+          "pointsAgainst": ""
+        },
+        {
+          "id": "d4",
+          "type": "Fours",
+          "pointsFor": "",
+          "assignments": [
+            {
+              "playerId": "7",
+              "availability": "Unset",
+              "positionName": "Lead"
+            },
+            {
+              "playerId": "8",
+              "availability": "Ongoing",
+              "positionName": "2nd"
+            },
+            {
+              "playerId": "10",
+              "availability": "Yes",
+              "positionName": "3rd"
+            },
+            {
+              "playerId": "7",
+              "availability": "Yes",
+              "positionName": "Skip"
+            }
+          ],
+          "pointsAgainst": ""
+        }
+      ],
+      "lastEmailSent": null,
+      "selector1Id": null,
+      "selector2Id": null,
+      "selector1Picks": [],
+      "selector2Picks": [],
+      "isConfirmed": true,
+      "created_at": "2026-03-20T08:19:35.958002+00:00"
+    }
+  ],
+  "databaseMatches": [],
+  "scorecards": []
 }
