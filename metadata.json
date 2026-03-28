@@ -706,20 +706,20 @@
   ],
   "scorecards": [
     {
-      "id": "sc-1774738833521-0.03183879328891548",
+      "id": "sc-1774631349463-0.17902795739571586",
       "competition": "Club Champs",
       "selectedType": "Singles",
-      "playByDate": "2026-03-28",
-      "agreedPlayDate": "2026-03-30",
-      "startTime": "",
+      "playByDate": "2026-03-31",
+      "agreedPlayDate": "2026-03-31",
+      "startTime": "17:30",
       "isHome": true,
       "teamA": {
-        "id": "cc-1774738833521-A-0.16867963756521642",
+        "id": "cc-1774631349463-A-0.7098176317217174",
         "type": "Singles",
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": "2",
+            "playerId": "7",
             "availability": "Unset"
           }
         ],
@@ -727,7 +727,7 @@
         "pointsAgainst": ""
       },
       "teamB": {
-        "id": "cc-1774738833521-B-0.9440635864627064",
+        "id": "cc-1774631349463-B-0.6026472941127062",
         "type": "Singles",
         "assignments": [
           {
