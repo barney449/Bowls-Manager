@@ -12,11 +12,16 @@
     {
       "id": "2",
       "name": "Gary Stubbs",
-      "avatarUrl": "https://picsum.photos/seed/gary/100/100",
-      "role": "Admin",
-      "isApproved": true,
       "email": "gary@example.com",
-      "password": "$2b$10$lLdve/FhV6jPNcMVeLHOtuMbE6eL2meCcYQlf80pmIfsgim84vgp6"
+      "role": "Admin",
+      "unavailablePeriods": [
+        {
+          "id": "period-1774738161658",
+          "startDate": "2026-03-30",
+          "endDate": "2026-03-30",
+          "type": "All Day"
+        }
+      ]
     },
     {
       "id": "3",
