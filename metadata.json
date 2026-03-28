@@ -22,7 +22,7 @@
           "type": "All Day"
         }
       ],
-      "password": "password"
+      "password": "$2b$10$gEJKDMIKlvRG4EmyNX4McekqTih2Y5pozNcw64DOeoZ60xWaRNEHe"
     },
     {
       "id": "3",
@@ -706,20 +706,20 @@
   ],
   "scorecards": [
     {
-      "id": "sc-1774631349463-0.17902795739571586",
+      "id": "sc-1774738833521-0.03183879328891548",
       "competition": "Club Champs",
       "selectedType": "Singles",
-      "playByDate": "2026-03-31",
-      "agreedPlayDate": "2026-03-31",
-      "startTime": "17:30",
+      "playByDate": "2026-03-28",
+      "agreedPlayDate": "2026-04-01",
+      "startTime": "",
       "isHome": true,
       "teamA": {
-        "id": "cc-1774631349463-A-0.7098176317217174",
+        "id": "cc-1774738833521-A-0.16867963756521642",
         "type": "Singles",
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": "7",
+            "playerId": "2",
             "availability": "Unset"
           }
         ],
@@ -727,7 +727,7 @@
         "pointsAgainst": ""
       },
       "teamB": {
-        "id": "cc-1774631349463-B-0.6026472941127062",
+        "id": "cc-1774738833521-B-0.9440635864627064",
         "type": "Singles",
         "assignments": [
           {
