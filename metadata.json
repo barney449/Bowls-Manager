@@ -713,8 +713,8 @@
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": null,
-            "availability": "Yes"
+            "playerId": "1",
+            "availability": "Unset"
           }
         ],
         "pointsFor": "",
@@ -733,7 +733,8 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": true
+      "isNew": true,
+      "isEditing": true
     }
   ],
   "appSettings": {
