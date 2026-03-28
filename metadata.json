@@ -1,7 +1,4 @@
 {
-  "name": "Bowls Team Manager",
-  "description": "A comprehensive team management system for Lawn Bowls, replacing complex spreadsheets with a modern React interface for tracking matches, player availability, and results.",
-  "requestFramePermissions": [],
   "players": [
     {
       "id": "1",
@@ -10,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "$2b$10$k8mijZ0FqzIff52NCGikCuKRAVvzqf.qcqGYh0lfemH3lshptq3Z."
+      "password": "password"
     },
     {
       "id": "2",
@@ -19,7 +16,7 @@
       "role": "Admin",
       "isApproved": true,
       "email": "gary@example.com",
-      "password": "$2b$10$RWmYn/wFV.XMQMkYCE17V.0eQ8xu7sl1eOYYBMblCib0swb53937a"
+      "password": "password"
     },
     {
       "id": "3",
@@ -112,212 +109,77 @@
       "password": "password"
     }
   ],
-  "chatMessages": [
-    {
-      "scorecardId": "sc-1774634703764-0.7826892806282152",
-      "playerId": "2",
-      "playerName": "Gary Stubbs",
-      "text": "when are you playing",
-      "interpretedDate": null,
-      "id": "msg-1774634744109-m3x42j2of",
-      "timestamp": "2026-03-27T18:05:44.109Z"
-    },
-    {
-      "scorecardId": "sc-1774634703764-0.7826892806282152",
-      "playerId": "1",
-      "playerName": "Jacob Inch",
-      "text": "thursday",
-      "interpretedDate": "2026-04-01",
-      "id": "msg-1774634770523-zz0awz3da",
-      "timestamp": "2026-03-27T18:06:10.523Z"
-    }
-  ],
   "matches": [
     {
-      "id": "match-1773985902953",
-      "date": "2026-03-20",
+      "id": "match-1774734795966",
+      "date": "2026-03-28",
       "time": "08:30",
-      "venue": "Papanui Club",
+      "venue": "Darfield",
       "isHome": false,
-      "competition": "New Competition",
-      "opponent": "TBD",
+      "competition": "Malvern Singles",
+      "opponent": "Darfield",
+      "isConfirmed": true,
       "disciplines": [
         {
-          "id": "disc-1773986025091-0.37832290919732703",
+          "id": "disc-1774734804984-0.7360558992085096",
           "type": "Singles",
-          "pointsFor": "",
           "assignments": [
             {
-              "playerId": "2",
-              "availability": "Unset",
-              "positionName": "Marker/Player"
+              "positionName": "Marker/Player",
+              "playerId": "1",
+              "availability": "Unset"
             }
           ],
+          "pointsFor": "",
           "pointsAgainst": ""
         }
       ],
-      "lastEmailSent": "2026-03-20T05:54:09.368Z",
-      "selector1Id": "",
-      "selector2Id": "",
       "selector1Picks": [
         {
-          "id": "disc-1773986025091-0.7668837849266782",
+          "id": "disc-1774734804984-0.7989425572131952",
           "type": "Singles",
-          "pointsFor": "",
           "assignments": [
             {
-              "playerId": null,
-              "availability": "Unset",
-              "positionName": "Marker/Player"
+              "positionName": "Marker/Player",
+              "playerId": "8",
+              "availability": "Unset"
             }
           ],
+          "pointsFor": "",
           "pointsAgainst": ""
         }
       ],
       "selector2Picks": [
         {
-          "id": "disc-1773986025091-0.5062045912016614",
+          "id": "disc-1774734804984-0.06691300445466397",
           "type": "Singles",
-          "pointsFor": "",
           "assignments": [
             {
-              "playerId": null,
-              "availability": "Unset",
-              "positionName": "Marker/Player"
-            }
-          ],
-          "pointsAgainst": ""
-        }
-      ],
-      "isConfirmed": false,
-      "created_at": "2026-03-20T08:19:36.04476+00:00"
-    },
-    {
-      "id": "match-1",
-      "date": "2026-01-31",
-      "time": "08:30",
-      "venue": "Papanui Club",
-      "isHome": false,
-      "competition": "Premier Men's Watson Shield",
-      "opponent": "Papanui Club",
-      "disciplines": [
-        {
-          "id": "d1",
-          "type": "Singles",
-          "pointsFor": "",
-          "assignments": [
-            {
-              "playerId": "1",
-              "availability": "Yes",
-              "positionName": "Singles"
-            }
-          ],
-          "pointsAgainst": ""
-        },
-        {
-          "id": "d2",
-          "type": "Pairs",
-          "pointsFor": "",
-          "assignments": [
-            {
-              "playerId": "2",
-              "availability": "Yes",
-              "positionName": "Lead"
-            },
-            {
-              "playerId": "5",
-              "availability": "Yes",
-              "positionName": "Skip"
-            }
-          ],
-          "pointsAgainst": ""
-        },
-        {
-          "id": "d3",
-          "type": "Triples",
-          "pointsFor": "",
-          "assignments": [
-            {
-              "playerId": "3",
-              "availability": "Yes",
-              "positionName": "Lead"
-            },
-            {
+              "positionName": "Marker/Player",
               "playerId": "9",
-              "availability": "Yes",
-              "positionName": "2nd"
-            },
-            {
-              "playerId": "6",
-              "availability": "Yes",
-              "positionName": "Skip"
+              "availability": "Unset"
             }
           ],
-          "pointsAgainst": ""
-        },
-        {
-          "id": "d4",
-          "type": "Fours",
           "pointsFor": "",
-          "assignments": [
-            {
-              "playerId": "7",
-              "availability": "Unset",
-              "positionName": "Lead"
-            },
-            {
-              "playerId": "8",
-              "availability": "Ongoing",
-              "positionName": "2nd"
-            },
-            {
-              "playerId": "10",
-              "availability": "Yes",
-              "positionName": "3rd"
-            },
-            {
-              "playerId": "7",
-              "availability": "Yes",
-              "positionName": "Skip"
-            }
-          ],
           "pointsAgainst": ""
         }
       ],
-      "lastEmailSent": null,
-      "selector1Id": null,
-      "selector2Id": null,
-      "selector1Picks": [],
-      "selector2Picks": [],
-      "isConfirmed": true,
-      "created_at": "2026-03-20T08:19:35.958002+00:00"
+      "selector1Id": "",
+      "selector2Id": ""
     }
   ],
   "databaseMatches": [],
   "scorecards": [
     {
-      "id": "sc-1774634703764-0.7826892806282152",
+      "id": "sc-1774734751166-0.0601501051816552",
       "competition": "Club Champs",
       "selectedType": "Singles",
-      "playByDate": "2026-03-31",
+      "playByDate": "",
       "agreedPlayDate": "",
       "startTime": "",
       "isHome": true,
       "teamA": {
-        "id": "cc-1774634703764-A-0.7029388326211823",
-        "type": "Singles",
-        "assignments": [
-          {
-            "positionName": "Skip",
-            "playerId": "7",
-            "availability": "Unset"
-          }
-        ],
-        "pointsFor": "",
-        "pointsAgainst": ""
-      },
-      "teamB": {
-        "id": "cc-1774634703764-B-0.8810902694650522",
+        "id": "cc-1774734751166-A-0.8387646043639657",
         "type": "Singles",
         "assignments": [
           {
@@ -329,8 +191,22 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": false,
-      "isEditing": false
+      "teamB": {
+        "id": "cc-1774734751166-B-0.9774175717186868",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": null,
+            "availability": "Yes"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "isNew": true,
+      "isEditing": true
     }
-  ]
+  ],
+  "appSettings": {}
 }
