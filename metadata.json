@@ -709,7 +709,7 @@
       "competition": "Club Champs",
       "selectedType": "Singles",
       "playByDate": "2026-03-31",
-      "agreedPlayDate": "",
+      "agreedPlayDate": "2026-03-31",
       "startTime": "",
       "isHome": true,
       "teamA": {
@@ -738,7 +738,7 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": true,
+      "isNew": false,
       "isEditing": true
     }
   ],
