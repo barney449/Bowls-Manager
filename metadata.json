@@ -157,7 +157,7 @@
           "assignments": [
             {
               "positionName": "Lead",
-              "playerId": null,
+              "playerId": "3",
               "availability": "Unset"
             },
             {
