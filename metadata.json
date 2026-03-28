@@ -16,7 +16,7 @@
       "role": "Admin",
       "isApproved": true,
       "email": "gary@example.com",
-      "password": "password"
+      "password": "$2b$10$mDoHSvXMDkKGa29pbxjEy.7HPaNp2WE.LA0bfz6cISsCo5.q.P2X."
     },
     {
       "id": "3",
