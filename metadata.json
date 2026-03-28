@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "$2b$10$q7MglajArcM3qj562Ut4o.S9I3oW83bhRz8Gj.zH6/oNJzgatf4Iu"
+      "password": "password"
     },
     {
       "id": "2",
@@ -16,7 +16,7 @@
       "role": "Admin",
       "isApproved": true,
       "email": "gary@example.com",
-      "password": "$2b$10$lLdve/FhV6jPNcMVeLHOtuMbE6eL2meCcYQlf80pmIfsgim84vgp6"
+      "password": "password"
     },
     {
       "id": "3",
@@ -713,7 +713,7 @@
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": "2",
+            "playerId": "7",
             "availability": "Unset"
           }
         ],
