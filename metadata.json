@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "$2b$10$xq74OlN1QAG/jmC00o5iWe.Hm0qmS2bM3aX489ZuyaY4rU4p0TK8u"
+      "password": "password"
     },
     {
       "id": "2",
@@ -710,7 +710,7 @@
       "competition": "Club Champs",
       "selectedType": "Singles",
       "playByDate": "2026-03-28",
-      "agreedPlayDate": "",
+      "agreedPlayDate": "2026-03-30",
       "startTime": "",
       "isHome": true,
       "teamA": {
