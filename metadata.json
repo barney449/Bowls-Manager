@@ -118,7 +118,7 @@
       "isHome": true,
       "competition": "Watson Shield",
       "opponent": "Belfast",
-      "isConfirmed": false,
+      "isConfirmed": true,
       "disciplines": [
         {
           "id": "disc-1774735378869-0.3101918074164941",
