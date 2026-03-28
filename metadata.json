@@ -126,7 +126,7 @@
           "assignments": [
             {
               "positionName": "Marker/Player",
-              "playerId": null,
+              "playerId": "1",
               "availability": "Unset"
             }
           ],
