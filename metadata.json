@@ -150,6 +150,29 @@
           ],
           "pointsFor": "",
           "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735385101-0.07773722704588315",
+          "type": "Triples",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
         }
       ],
       "selector1Picks": [
@@ -183,6 +206,29 @@
           ],
           "pointsFor": "",
           "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735385101-0.3543234389212726",
+          "type": "Triples",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
         }
       ],
       "selector2Picks": [
@@ -205,6 +251,29 @@
           "assignments": [
             {
               "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735385101-0.4654133840570216",
+          "type": "Triples",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
               "playerId": null,
               "availability": "Unset"
             },
