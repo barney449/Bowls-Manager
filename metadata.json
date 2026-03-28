@@ -173,6 +173,34 @@
           ],
           "pointsFor": "",
           "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735389108-0.8284451629238643",
+          "type": "Fours",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
         }
       ],
       "selector1Picks": [
@@ -229,6 +257,34 @@
           ],
           "pointsFor": "",
           "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735389108-0.31154694656699866",
+          "type": "Fours",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
         }
       ],
       "selector2Picks": [
@@ -274,6 +330,34 @@
             },
             {
               "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735389108-0.14375686220690198",
+          "type": "Fours",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
               "playerId": null,
               "availability": "Unset"
             },
