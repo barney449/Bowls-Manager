@@ -190,7 +190,7 @@
             },
             {
               "positionName": "3rd",
-              "playerId": null,
+              "playerId": "10",
               "availability": "Unset"
             },
             {
