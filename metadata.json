@@ -144,7 +144,7 @@
             },
             {
               "positionName": "Skip",
-              "playerId": null,
+              "playerId": "5",
               "availability": "Unset"
             }
           ],
