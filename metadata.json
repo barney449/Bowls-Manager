@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "password"
+      "password": "$2b$10$URnFIYOMdRNaWYLszQuKS.gaDIE/UmluWduiMU82yXvJfUXWpq.Pu"
     },
     {
       "id": "2",
@@ -22,7 +22,7 @@
           "type": "All Day"
         }
       ],
-      "password": "password"
+      "password": "$2b$10$W2HzVNycvTr.U5pYq2UJ0OA8TBLet1vihYNtCXRQ1Uj41SemWhYiC"
     },
     {
       "id": "3",
@@ -706,41 +706,40 @@
   ],
   "scorecards": [
     {
-      "id": "sc-1774631349463-0.17902795739571586",
+      "id": "sc-1774741612581-0.7071695824154453",
       "competition": "Club Champs",
       "selectedType": "Singles",
-      "playByDate": "2026-03-31",
-      "agreedPlayDate": "2026-03-31",
-      "startTime": "17:30",
+      "playByDate": "",
+      "agreedPlayDate": "",
+      "startTime": "",
       "isHome": true,
       "teamA": {
-        "id": "cc-1774631349463-A-0.7098176317217174",
+        "id": "cc-1774741612581-A-0.9787234081769892",
         "type": "Singles",
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": "7",
-            "availability": "Unset"
+            "playerId": null,
+            "availability": "Yes"
           }
         ],
         "pointsFor": "",
         "pointsAgainst": ""
       },
       "teamB": {
-        "id": "cc-1774631349463-B-0.6026472941127062",
+        "id": "cc-1774741612581-B-0.27111756807705645",
         "type": "Singles",
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": "1",
-            "availability": "Unset"
+            "playerId": null,
+            "availability": "Yes"
           }
         ],
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": false,
-      "isEditing": false
+      "isNew": true
     }
   ],
   "appSettings": {
