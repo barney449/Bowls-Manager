@@ -132,6 +132,24 @@
           ],
           "pointsFor": "",
           "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735382029-0.9365815978370473",
+          "type": "Pairs",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
         }
       ],
       "selector1Picks": [
@@ -147,6 +165,24 @@
           ],
           "pointsFor": "",
           "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735382029-0.45579367692501993",
+          "type": "Pairs",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
         }
       ],
       "selector2Picks": [
@@ -156,6 +192,24 @@
           "assignments": [
             {
               "positionName": "Marker/Player",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735382029-0.4082271030852247",
+          "type": "Pairs",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
               "playerId": null,
               "availability": "Unset"
             }
