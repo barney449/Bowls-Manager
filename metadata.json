@@ -130,6 +130,329 @@
               "availability": "Unset"
             }
           ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735382029-0.9365815978370473",
+          "type": "Pairs",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": "2",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": "5",
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735385101-0.07773722704588315",
+          "type": "Triples",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": "3",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": "9",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": "6",
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735389108-0.8284451629238643",
+          "type": "Fours",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": "4",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": "8",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
+              "playerId": "10",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": "7",
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector1Picks": [
+        {
+          "id": "disc-1774735378869-0.050331271685071566",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735382029-0.45579367692501993",
+          "type": "Pairs",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735385101-0.3543234389212726",
+          "type": "Triples",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735389108-0.31154694656699866",
+          "type": "Fours",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector2Picks": [
+        {
+          "id": "disc-1774735378869-0.12120624012750614",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735382029-0.4082271030852247",
+          "type": "Pairs",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735385101-0.4654133840570216",
+          "type": "Triples",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        },
+        {
+          "id": "disc-1774735389108-0.14375686220690198",
+          "type": "Fours",
+          "assignments": [
+            {
+              "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "Skip",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector1Id": "",
+      "selector2Id": ""
+    },
+    {
+      "id": "match-1774734795966",
+      "date": "2026-03-28",
+      "time": "08:30",
+      "venue": "Darfield",
+      "isHome": false,
+      "competition": "Malvern Singles",
+      "opponent": "Darfield",
+      "isConfirmed": true,
+      "disciplines": [
+        {
+          "id": "disc-1774734804984-0.7360558992085096",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": "1",
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector1Picks": [
+        {
+          "id": "disc-1774734804984-0.7989425572131952",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": "8",
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector2Picks": [
+        {
+          "id": "disc-1774734804984-0.06691300445466397",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": "9",
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector1Id": "",
+      "selector2Id": ""
+    }
+  ],
+  "databaseMatches": [
+    {
+      "id": "match-1774735322692-db-1774735565331",
+      "date": "2026-03-31",
+      "time": "08:30",
+      "venue": "Oxford",
+      "isHome": true,
+      "competition": "Watson Shield",
+      "opponent": "Belfast",
+      "isConfirmed": true,
+      "disciplines": [
+        {
+          "id": "disc-1774735378869-0.3101918074164941",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": "1",
+              "availability": "Unset"
+            }
+          ],
           "pointsFor": "1",
           "pointsAgainst": "1"
         },
@@ -373,66 +696,8 @@
       ],
       "selector1Id": "",
       "selector2Id": ""
-    },
-    {
-      "id": "match-1774734795966",
-      "date": "2026-03-28",
-      "time": "08:30",
-      "venue": "Darfield",
-      "isHome": false,
-      "competition": "Malvern Singles",
-      "opponent": "Darfield",
-      "isConfirmed": true,
-      "disciplines": [
-        {
-          "id": "disc-1774734804984-0.7360558992085096",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": "1",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        }
-      ],
-      "selector1Picks": [
-        {
-          "id": "disc-1774734804984-0.7989425572131952",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": "8",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        }
-      ],
-      "selector2Picks": [
-        {
-          "id": "disc-1774734804984-0.06691300445466397",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": "9",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        }
-      ],
-      "selector1Id": "",
-      "selector2Id": ""
     }
   ],
-  "databaseMatches": [],
   "scorecards": [
     {
       "id": "sc-1774734751166-0.0601501051816552",
