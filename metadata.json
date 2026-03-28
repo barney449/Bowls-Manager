@@ -119,9 +119,51 @@
       "competition": "Watson Shield",
       "opponent": "Belfast",
       "isConfirmed": false,
-      "disciplines": [],
-      "selector1Picks": [],
-      "selector2Picks": [],
+      "disciplines": [
+        {
+          "id": "disc-1774735378869-0.3101918074164941",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector1Picks": [
+        {
+          "id": "disc-1774735378869-0.050331271685071566",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
+      "selector2Picks": [
+        {
+          "id": "disc-1774735378869-0.12120624012750614",
+          "type": "Singles",
+          "assignments": [
+            {
+              "positionName": "Marker/Player",
+              "playerId": null,
+              "availability": "Unset"
+            }
+          ],
+          "pointsFor": "",
+          "pointsAgainst": ""
+        }
+      ],
       "selector1Id": "",
       "selector2Id": ""
     },
