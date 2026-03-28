@@ -162,12 +162,12 @@
             },
             {
               "positionName": "2nd",
-              "playerId": null,
+              "playerId": "9",
               "availability": "Unset"
             },
             {
               "positionName": "Skip",
-              "playerId": null,
+              "playerId": "6",
               "availability": "Unset"
             }
           ],
