@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "password"
+      "password": "$2b$10$k/1dWkJ.ONXWcr2vbzPcAe4UdsAA35CUT5F/gbOGaZOmP56h2d3.u"
     },
     {
       "id": "2",
