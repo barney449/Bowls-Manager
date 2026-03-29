@@ -22,7 +22,7 @@
           "type": "All Day"
         }
       ],
-      "password": "$2b$10$jjZ0Xl0l3kHEgAxRLPTnT.HPj7PC7QpVxfQw6n2tkgHGNt4pd/L/W"
+      "password": "password"
     },
     {
       "id": "3",
@@ -740,7 +740,8 @@
         "pointsAgainst": ""
       },
       "isNew": false,
-      "isEditing": false
+      "isEditing": false,
+      "isConfirmed": true
     }
   ],
   "appSettings": {
