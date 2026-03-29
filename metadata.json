@@ -438,288 +438,23 @@
       "selector2Id": ""
     }
   ],
-  "databaseMatches": [
-    {
-      "id": "match-1774735322692-db-1774735565331",
-      "date": "2026-03-31",
-      "time": "08:30",
-      "venue": "Oxford",
-      "isHome": true,
-      "competition": "Watson Shield",
-      "opponent": "Belfast",
-      "isConfirmed": true,
-      "disciplines": [
-        {
-          "id": "disc-1774735378869-0.3101918074164941",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": "1",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "1",
-          "pointsAgainst": "1"
-        },
-        {
-          "id": "disc-1774735382029-0.9365815978370473",
-          "type": "Pairs",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": "2",
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": "5",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "2",
-          "pointsAgainst": "2"
-        },
-        {
-          "id": "disc-1774735385101-0.07773722704588315",
-          "type": "Triples",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": "3",
-              "availability": "Unset"
-            },
-            {
-              "positionName": "2nd",
-              "playerId": "9",
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": "6",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "3",
-          "pointsAgainst": "3"
-        },
-        {
-          "id": "disc-1774735389108-0.8284451629238643",
-          "type": "Fours",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": "4",
-              "availability": "Unset"
-            },
-            {
-              "positionName": "2nd",
-              "playerId": "8",
-              "availability": "Unset"
-            },
-            {
-              "positionName": "3rd",
-              "playerId": "10",
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": "7",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "4",
-          "pointsAgainst": "4"
-        }
-      ],
-      "selector1Picks": [
-        {
-          "id": "disc-1774735378869-0.050331271685071566",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1774735382029-0.45579367692501993",
-          "type": "Pairs",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1774735385101-0.3543234389212726",
-          "type": "Triples",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "2nd",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1774735389108-0.31154694656699866",
-          "type": "Fours",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "2nd",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "3rd",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        }
-      ],
-      "selector2Picks": [
-        {
-          "id": "disc-1774735378869-0.12120624012750614",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1774735382029-0.4082271030852247",
-          "type": "Pairs",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1774735385101-0.4654133840570216",
-          "type": "Triples",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "2nd",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1774735389108-0.14375686220690198",
-          "type": "Fours",
-          "assignments": [
-            {
-              "positionName": "Lead",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "2nd",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "3rd",
-              "playerId": null,
-              "availability": "Unset"
-            },
-            {
-              "positionName": "Skip",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        }
-      ],
-      "selector1Id": "",
-      "selector2Id": ""
-    }
-  ],
+  "databaseMatches": [],
   "scorecards": [
     {
-      "id": "sc-1774631349463-0.17902795739571586",
+      "id": "sc-1774744366847-0.29270809049181923",
       "competition": "Club Champs",
       "selectedType": "Singles",
-      "playByDate": "2026-03-31",
-      "agreedPlayDate": "2026-03-31",
+      "playByDate": "2026-03-29",
+      "agreedPlayDate": "2026-04-02",
       "startTime": "17:30",
       "isHome": true,
       "teamA": {
-        "id": "cc-1774631349463-A-0.7098176317217174",
+        "id": "cc-1774744366847-A-0.37168192795104293",
         "type": "Singles",
         "assignments": [
           {
             "positionName": "Skip",
-            "playerId": "7",
+            "playerId": "2",
             "availability": "Unset"
           }
         ],
@@ -727,7 +462,7 @@
         "pointsAgainst": ""
       },
       "teamB": {
-        "id": "cc-1774631349463-B-0.6026472941127062",
+        "id": "cc-1774744366847-B-0.2682505023923675",
         "type": "Singles",
         "assignments": [
           {
@@ -740,7 +475,8 @@
         "pointsAgainst": ""
       },
       "isNew": false,
-      "isEditing": false
+      "isEditing": false,
+      "isConfirmed": true
     }
   ],
   "appSettings": {
