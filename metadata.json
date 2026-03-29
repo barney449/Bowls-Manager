@@ -740,7 +740,8 @@
         "pointsAgainst": ""
       },
       "isNew": false,
-      "isEditing": false
+      "isEditing": false,
+      "isConfirmed": true
     }
   ],
   "appSettings": {
