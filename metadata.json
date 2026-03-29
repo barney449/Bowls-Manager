@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "password"
+      "password": "$2b$10$F/3DBATJkqQ9.YASIIjY2.0r2AM5PIygVbObZBPBJr47LfBN2sgKW"
     },
     {
       "id": "2",
@@ -739,8 +739,8 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": true,
-      "isEditing": true
+      "isNew": false,
+      "isEditing": false
     }
   ],
   "appSettings": {
