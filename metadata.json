@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "$2b$10$RxjXTRpuLqwjWAfjVFIIu.wIZzdI0/gJ1iyPQo4K2XBFnP3mH2msW"
+      "password": "password"
     },
     {
       "id": "2",
@@ -711,7 +711,7 @@
       "selectedType": "Singles",
       "playByDate": "2026-03-29",
       "agreedPlayDate": "2026-04-02",
-      "startTime": "",
+      "startTime": "17:00",
       "isHome": true,
       "teamA": {
         "id": "cc-1774744366847-A-0.37168192795104293",
