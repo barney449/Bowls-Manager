@@ -22,7 +22,7 @@
           "type": "All Day"
         }
       ],
-      "password": "$2b$10$XvFs2z1WJY3t7FI43DXkQugy/d4F8kkKnczcw2Tq0xZuwf/sPEhUm"
+      "password": "password"
     },
     {
       "id": "3",
@@ -711,7 +711,7 @@
       "selectedType": "Singles",
       "playByDate": "2026-03-29",
       "agreedPlayDate": "2026-04-02",
-      "startTime": "",
+      "startTime": "30:00",
       "isHome": true,
       "teamA": {
         "id": "cc-1774742795652-A-0.530193735026626",
