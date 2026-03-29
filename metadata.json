@@ -83,7 +83,8 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "nick@example.com",
-      "password": "password"
+      "password": "password",
+      "status": "Active"
     },
     {
       "id": "9",
