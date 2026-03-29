@@ -55,7 +55,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageCropped, onCancel,
       <div 
         {...getRootProps()} 
         className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors
-          ${isDragActive ? 'border-bowls-darkGreen bg-green-50' : 'border-gray-300 hover:border-bowls-darkGreen hover:bg-gray-50'}
+          ${isDragActive ? 'border-green-600 bg-green-50' : 'border-gray-300 hover:border-green-600 hover:bg-gray-50'}
         `}
       >
         <input {...getInputProps()} />
@@ -100,7 +100,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageCropped, onCancel,
           step={0.1}
           aria-labelledby="Zoom"
           onChange={(e) => setScale(Number(e.target.value))}
-          className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-bowls-darkGreen"
+          className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600"
         />
         <ZoomIn className="w-4 h-4 text-gray-500" />
       </div>
@@ -117,7 +117,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageCropped, onCancel,
           type="button"
           onClick={handleSave}
           disabled={isProcessing}
-          className="px-3 py-1.5 text-xs font-bold bg-bowls-darkGreen text-white hover:bg-bowls-green rounded-lg flex items-center gap-1 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-3 py-1.5 text-xs font-bold bg-green-600 text-white hover:bg-green-700 rounded-lg flex items-center gap-1 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isProcessing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
           {isProcessing ? 'Processing...' : 'Apply Crop'}

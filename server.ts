@@ -4,10 +4,12 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import session from "express-session";
-import { google } from "googleapis";
 import { WebSocketServer, WebSocket } from "ws";
 import { createServer } from "http";
 import fs from "fs";
+import { Octokit } from "octokit";
+import bcrypt from "bcryptjs";
+import { MOCK_PLAYERS } from "./constants.js";
 
 dotenv.config();
 
@@ -33,6 +35,10 @@ const saveChatMessages = () => {
     console.error("Failed to save chat messages:", e);
   }
 };
+
+// Admin Emails
+const ADMIN_EMAILS = ["mackenziekittycat33@gmail.com", "gary@example.com"];
+const ADMIN_EDITOR_EMAILS = ["sean@example.com"];
 
 async function startServer() {
   const app = express();
@@ -77,109 +83,260 @@ async function startServer() {
   app.use(session({
     secret: process.env.SESSION_SECRET || "bowls-secret",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      secure: true,
-      sameSite: 'none',
+      secure: true, // Required for SameSite=None
+      sameSite: 'none', // Required for cross-origin iframe
       httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     }
   }));
 
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI || `${process.env.APP_URL}/auth/callback`
-  );
-
-  // Auth Routes
-  app.get("/api/auth/google/url", (req, res) => {
-    const url = oauth2Client.generateAuthUrl({
-      access_type: "offline",
-      scope: ["https://www.googleapis.com/auth/drive.file"],
-      prompt: "consent"
-    });
-    res.json({ url });
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN
   });
 
-  app.get("/auth/callback", async (req, res) => {
-    const { code } = req.query;
-    try {
-      const { tokens } = await oauth2Client.getToken(code as string);
-      (req.session as any).tokens = tokens;
-      
-      res.send(`
-        <html>
-          <body>
-            <script>
-              if (window.opener) {
-                window.opener.postMessage({ type: 'OAUTH_AUTH_SUCCESS' }, '*');
-                window.close();
-              } else {
-                window.location.href = '/';
-              }
-            </script>
-            <p>Authentication successful. This window should close automatically.</p>
-          </body>
-        </html>
-      `);
-    } catch (error) {
-      console.error("Error exchanging code for tokens:", error);
-      res.status(500).send("Authentication failed");
-    }
-  });
+  const GITHUB_OWNER = process.env.GITHUB_OWNER;
+  const GITHUB_REPO = process.env.GITHUB_REPO;
+  const GITHUB_BRANCH = (process.env.GITHUB_BRANCH || "main").toLowerCase();
+  const GITHUB_FILE_PATH = process.env.GITHUB_FILE_PATH || "data.json";
+  const LOCAL_DATA_FILE = path.join(__dirname, "data.json");
 
-  app.get("/api/auth/status", (req, res) => {
-    res.json({ connected: !!(req.session as any).tokens });
-  });
-
-  app.post("/api/drive/upload", async (req, res) => {
-    const tokens = (req.session as any).tokens;
-    if (!tokens) {
-      return res.status(401).json({ error: "Not connected to Google Drive" });
+  const getGitHubData = async () => {
+    const fallbackData = { players: MOCK_PLAYERS, matches: [], databaseMatches: [], scorecards: [], appSettings: {} };
+    
+    // Check if local data exists first as a baseline
+    let localData = fallbackData;
+    if (fs.existsSync(LOCAL_DATA_FILE)) {
+      try {
+        localData = JSON.parse(fs.readFileSync(LOCAL_DATA_FILE, "utf-8"));
+      } catch (e) {
+        console.error("Failed to load local data:", e);
+      }
     }
 
-    const { data, filename } = req.body;
-    oauth2Client.setCredentials(tokens);
-
-    const drive = google.drive({ version: "v3", auth: oauth2Client });
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID || "1BZtNra9l4qXHG1v7DVy4nN9ByaBqRi_C";
+    if (!GITHUB_OWNER || !GITHUB_REPO || !process.env.GITHUB_TOKEN) {
+      console.warn("GitHub configuration missing, using local storage");
+      return localData;
+    }
 
     try {
-      // Check if file already exists in the folder to update it, or create new
-      const response = await drive.files.list({
-        q: `name = '${filename}' and '${folderId}' in parents and trashed = false`,
-        fields: "files(id, name)",
+      const response = await octokit.rest.repos.getContent({
+        owner: GITHUB_OWNER,
+        repo: GITHUB_REPO,
+        path: GITHUB_FILE_PATH,
+        ...(GITHUB_BRANCH ? { ref: GITHUB_BRANCH } : {})
       });
 
-      const fileMetadata = {
-        name: filename,
-        parents: [folderId],
-      };
-
-      const media = {
-        mimeType: "application/json",
-        body: JSON.stringify(data, null, 2),
-      };
-
-      if (response.data.files && response.data.files.length > 0) {
-        const fileId = response.data.files[0].id!;
-        await drive.files.update({
-          fileId: fileId,
-          media: media,
-        });
-        res.json({ success: true, message: "File updated", fileId });
-      } else {
-        const file = await drive.files.create({
-          requestBody: fileMetadata,
-          media: media,
-          fields: "id",
-        });
-        res.json({ success: true, message: "File created", fileId: file.data.id });
+      if ("content" in response.data) {
+        const content = Buffer.from(response.data.content, "base64").toString("utf-8");
+        const parsed = JSON.parse(content);
+        // Ensure mock players are present if not already in GitHub
+        if (!parsed.players || parsed.players.length === 0) {
+            parsed.players = MOCK_PLAYERS;
+        }
+        return parsed;
       }
-    } catch (error) {
-      console.error("Error uploading to Drive:", error);
-      res.status(500).json({ error: "Failed to upload to Google Drive" });
+      return localData;
+    } catch (error: any) {
+      console.error("GitHub fetch failed, falling back to local data:", error.message);
+      return localData;
     }
+  };
+
+  const saveGitHubData = async (data: any) => {
+    // Always save locally as a backup
+    try {
+      fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(data, null, 2));
+    } catch (e) {
+      console.error("Failed to save data locally:", e);
+    }
+
+    if (!GITHUB_OWNER || !GITHUB_REPO || !process.env.GITHUB_TOKEN) {
+      return; // Skip GitHub if not configured
+    }
+
+    try {
+      let sha: string | undefined;
+      try {
+        const existingFile = await octokit.rest.repos.getContent({
+          owner: GITHUB_OWNER,
+          repo: GITHUB_REPO,
+          path: GITHUB_FILE_PATH,
+          ...(GITHUB_BRANCH ? { ref: GITHUB_BRANCH } : {})
+        });
+        if ("sha" in existingFile.data) {
+          sha = existingFile.data.sha;
+        }
+      } catch (e) {}
+
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner: GITHUB_OWNER,
+        repo: GITHUB_REPO,
+        path: GITHUB_FILE_PATH,
+        message: "Update bowls data",
+        content: Buffer.from(JSON.stringify(data, null, 2)).toString("base64"),
+        sha,
+        ...(GITHUB_BRANCH ? { branch: GITHUB_BRANCH } : {})
+      });
+    } catch (error: any) {
+      console.error("GitHub save failed:", error.message);
+      // We don't throw here to avoid breaking the app if GitHub is down/misconfigured
+      // since we already saved locally.
+    }
+  };
+
+  app.get("/api/github/data", async (req, res) => {
+    try {
+      const data = await getGitHubData();
+      res.json(data);
+    } catch (error: any) {
+      console.error("Error fetching from GitHub:", error);
+      res.status(error.status || 500).json({ 
+        error: error.message || "Failed to fetch data from GitHub",
+        details: error.response?.data || {}
+      });
+    }
+  });
+
+  app.post("/api/github/data", async (req, res) => {
+    try {
+      await saveGitHubData(req.body.data);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error saving to GitHub:", error);
+      res.status(error.status || 500).json({ 
+        error: error.message || "Failed to save data to GitHub",
+        details: error.response?.data || {}
+      });
+    }
+  });
+
+  // Auth Routes
+  app.post("/api/auth/signup", async (req, res) => {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+      const data = await getGitHubData();
+      const players = data.players || [];
+
+      if (players.find((p: any) => p.email.toLowerCase() === email.toLowerCase())) {
+        return res.status(400).json({ error: "User already exists" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      let role = "Active Member";
+      if (ADMIN_EMAILS.includes(email.toLowerCase())) {
+        role = "Admin";
+      } else if (ADMIN_EDITOR_EMAILS.includes(email.toLowerCase())) {
+        role = "Admin Editor";
+      }
+
+      const newPlayer = {
+        id: `player-${Date.now()}`,
+        name,
+        email,
+        password: hashedPassword,
+        role,
+        isApproved: true,
+        avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+        status: "Active"
+      };
+
+      data.players = [...players, newPlayer];
+      await saveGitHubData(data);
+
+      (req.session as any).userId = newPlayer.id;
+      res.json({ user: { id: newPlayer.id, name: newPlayer.name, email: newPlayer.email, role: newPlayer.role } });
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      res.status(500).json({ error: "Signup failed" });
+    }
+  });
+
+    app.post("/api/auth/login", async (req, res) => {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: "Missing email or password" });
+      }
+
+      try {
+        const data = await getGitHubData();
+        const players = data.players || [];
+        const user = players.find((p: any) => p.email.toLowerCase() === email.toLowerCase());
+
+        if (!user) {
+          console.warn(`Login failed: User not found for email ${email}`);
+          return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        // Check if the password is a bcrypt hash
+        const isBcryptHash = (str: string) => /^\$2[ayb]\$.{56}$/.test(str);
+
+        let isMatch = false;
+        if (isBcryptHash(user.password)) {
+          isMatch = await bcrypt.compare(password, user.password);
+        } else {
+          // Handle plain text passwords for migration/demo
+          isMatch = password === user.password;
+          
+          // If it's a match, we should probably hash it now for security
+          if (isMatch) {
+              try {
+                  const hashedPassword = await bcrypt.hash(password, 10);
+                  user.password = hashedPassword;
+                  await saveGitHubData(data);
+              } catch (saveError) {
+                  console.error("Failed to update password hash during login:", saveError);
+                  // We still allow login if the password matched, even if saving the hash failed
+              }
+          }
+        }
+
+        if (!isMatch) {
+          console.warn(`Login failed: Password mismatch for email ${email}`);
+          return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        (req.session as any).userId = user.id;
+        res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+      } catch (error: any) {
+        console.error("Login error:", error);
+        res.status(500).json({ error: `Login failed: ${error.message}` });
+      }
+    });
+
+  app.get("/api/auth/me", async (req, res) => {
+    const userId = (req.session as any).userId;
+    if (!userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    try {
+      const data = await getGitHubData();
+      const user = data.players.find((p: any) => p.id === userId);
+      if (!user) {
+        return res.status(401).json({ error: "User not found" });
+      }
+
+      res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+    } catch (error: any) {
+      res.status(500).json({ error: "Failed to fetch user" });
+    }
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: "Logout failed" });
+      }
+      res.clearCookie("connect.sid");
+      res.json({ success: true });
+    });
   });
 
   // Vite middleware for development

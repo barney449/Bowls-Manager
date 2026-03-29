@@ -17,7 +17,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
   const [nameInput, setNameInput] = useState('');
   const [avatarInput, setAvatarInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
-  const [roleInput, setRoleInput] = useState<'Admin' | 'Admin Editor' | 'Member'>('Member');
+  const [roleInput, setRoleInput] = useState<'Admin' | 'Admin Editor' | 'Active Member'>('Active Member');
 
   const [statusInput, setStatusInput] = useState<'Active' | 'Inactive'>('Active');
 
@@ -30,7 +30,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
       setNameInput('');
       setAvatarInput('');
       setEmailInput('');
-      setRoleInput('Member');
+      setRoleInput('Active Member');
       setStatusInput('Active');
   };
 
@@ -40,7 +40,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
       setNameInput(player.name);
       setAvatarInput(player.avatarUrl);
       setEmailInput(player.email || '');
-      setRoleInput((player.role === 'Admin' || player.role === 'Admin Editor' || player.role === 'Member') ? player.role : 'Member');
+      setRoleInput((player.role === 'Admin' || player.role === 'Admin Editor' || player.role === 'Active Member') ? player.role : 'Active Member');
       setStatusInput(player.status || 'Active');
   };
 
@@ -81,7 +81,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
     setNameInput('');
     setAvatarInput('');
     setEmailInput('');
-    setRoleInput('Member');
+    setRoleInput('Active Member');
     setStatusInput('Active');
   };
 
@@ -96,7 +96,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
       onUpdatePlayer({
           ...player,
           isApproved: true,
-          role: 'Member' // Default to Member upon approval
+          role: 'Active Member' // Default to Active Member upon approval
       });
   };
 
@@ -152,7 +152,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
           <h2 className="text-2xl font-bold text-gray-800">Team Roster</h2>
           <button 
             onClick={startAdding}
-            className="flex items-center gap-2 bg-bowls-darkGreen text-white px-4 py-2 rounded-lg hover:bg-bowls-green hover:text-bowls-darkGreen transition-colors font-semibold shadow"
+            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold shadow"
           >
             <Plus className="w-4 h-4" /> Add Player
           </button>
@@ -173,7 +173,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
                             type="text" 
                             value={nameInput}
                             onChange={(e) => setNameInput(e.target.value)}
-                            className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-bowls-darkGreen focus:border-transparent"
+                            className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-green-600 focus:border-transparent"
                             placeholder="e.g. John Doe"
                             autoFocus
                           />
@@ -184,7 +184,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
                             type="email" 
                             value={emailInput}
                             onChange={(e) => setEmailInput(e.target.value)}
-                            className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-bowls-darkGreen focus:border-transparent"
+                            className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-green-600 focus:border-transparent"
                             placeholder="user@example.com"
                           />
                        </div>
@@ -193,10 +193,10 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
                               <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
                               <select
                                 value={roleInput}
-                                onChange={(e) => setRoleInput(e.target.value as 'Admin' | 'Admin Editor' | 'Member')}
-                                className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-bowls-darkGreen focus:border-transparent"
+                                onChange={(e) => setRoleInput(e.target.value as 'Admin' | 'Admin Editor' | 'Active Member')}
+                                className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-green-600 focus:border-transparent"
                               >
-                                  <option value="Member">Member</option>
+                                  <option value="Active Member">Active Member</option>
                                   <option value="Admin Editor">Admin Editor</option>
                                   <option value="Admin">Admin</option>
                               </select>
@@ -206,7 +206,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
                               <select
                                 value={statusInput}
                                 onChange={(e) => setStatusInput(e.target.value as 'Active' | 'Inactive')}
-                                className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-bowls-darkGreen focus:border-transparent"
+                                className="w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-green-600 focus:border-transparent"
                               >
                                   <option value="Active">Active Member</option>
                                   <option value="Inactive">Unavailable / Inactive</option>
@@ -276,7 +276,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
 
                <div className="flex justify-end gap-2 pt-4 border-t border-gray-100 mt-4">
                   <button type="button" onClick={() => { setIsAdding(false); setEditingId(null); }} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-                  <button type="submit" className="px-6 py-2 text-sm font-bold bg-bowls-darkGreen text-white rounded-lg hover:bg-opacity-90 shadow-md">
+                  <button type="submit" className="px-6 py-2 text-sm font-bold bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md">
                       {isAdding ? 'Save Player' : 'Update Player'}
                   </button>
                </div>
@@ -295,7 +295,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
                 <div className={`relative ${player.status === 'Inactive' ? 'grayscale opacity-75' : ''}`}>
                     <Avatar src={player.avatarUrl} alt={player.name} size="md" />
                     {player.role === 'Admin' && (
-                        <div className="absolute -top-1 -right-1 bg-bowls-darkGreen text-white rounded-full p-0.5 border border-white" title="Admin">
+                        <div className="absolute -top-1 -right-1 bg-green-600 text-white rounded-full p-0.5 border border-white" title="Admin">
                             <ShieldAlert className="w-3 h-3" />
                         </div>
                     )}
@@ -314,7 +314,7 @@ const PlayerManager: React.FC<PlayerManagerProps> = ({ players, onAddPlayer, onR
                        <span className={`text-xs ${player.status === 'Inactive' ? 'text-red-600 font-bold' : 'text-green-600 font-medium'}`}>
                            {player.status === 'Inactive' ? 'Unavailable' : 'Active Member'}
                        </span>
-                       <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{player.role || 'Member'}</span>
+                       <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{player.role || 'Active Member'}</span>
                    </div>
                 </div>
 

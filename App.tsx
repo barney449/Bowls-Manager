@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Match, ViewMode, Player, Scorecard } from './types';
 import { MOCK_PLAYERS, INITIAL_MATCH } from './constants';
-import { supabaseService } from './lib/supabaseService';
 import MatchEditor from './components/MatchEditor';
 import DatabaseView from './components/DatabaseView';
 import PlayerManager from './components/PlayerManager';
-import ClubChamps from './components/ClubChamps';
+import ClubChamps, { ClubChampsHandle } from './components/ClubChamps';
 import PlayerAvailability from './components/PlayerAvailability';
 import LoginView from './components/LoginView';
-import DatabaseSetup from './components/DatabaseSetup';
-import { LayoutDashboard, Table, UserCircle, Settings, Users, Plus, Shield, X, RefreshCw, Trophy, LogOut, AlertTriangle, Calendar, Image, Upload, Trash2, Database } from 'lucide-react';
+import { LayoutDashboard, Table, UserCircle, Settings, Users, Plus, Shield, X, RefreshCw, Trophy, LogOut, AlertTriangle, Calendar, Image, Upload, Trash2, Check, Download } from 'lucide-react';
 
 const App: React.FC = () => {
   // Persistence state
@@ -20,6 +18,14 @@ const App: React.FC = () => {
   const [databaseMatches, setDatabaseMatches] = useState<Match[]>(() => {
       const saved = localStorage.getItem('bowls_database');
       return saved ? JSON.parse(saved) : [];
+  });
+  const [scorecards, setScorecards] = useState<Scorecard[]>(() => {
+      const saved = localStorage.getItem('bowls_club_champs');
+      return saved ? JSON.parse(saved) : [];
+  });
+  const [appSettings, setAppSettings] = useState<any>(() => {
+      const saved = localStorage.getItem('bowls_app_settings');
+      return saved ? JSON.parse(saved) : {};
   });
   const [players, setPlayers] = useState<Player[]>(() => {
       const saved = localStorage.getItem('bowls_players');
@@ -44,11 +50,6 @@ const App: React.FC = () => {
           return p;
       });
   });
-
-  const [scorecards, setScorecards] = useState<Scorecard[]>(() => {
-      const saved = localStorage.getItem('bowls_club_champs');
-      return saved ? JSON.parse(saved) : [];
-  });
   
   // Auth State
   const [currentUser, setCurrentUser] = useState<Player | null>(() => {
@@ -64,31 +65,25 @@ const App: React.FC = () => {
 
   // Background State
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
-      return localStorage.getItem('bowls_background_image');
+      return appSettings?.backgroundImage || localStorage.getItem('bowls_background_image');
   });
   const [backgroundScale, setBackgroundScale] = useState<number>(() => {
-      const saved = localStorage.getItem('bowls_background_scale');
-      return saved ? parseFloat(saved) : 1;
+      return appSettings?.backgroundScale || parseFloat(localStorage.getItem('bowls_background_scale') || '1');
   });
   const [bgPosition, setBgPosition] = useState<{x: number, y: number}>(() => {
-      const saved = localStorage.getItem('bowls_background_position');
-      return saved ? JSON.parse(saved) : { x: 50, y: 50 };
+      return appSettings?.bgPosition || JSON.parse(localStorage.getItem('bowls_background_position') || '{"x": 50, "y": 50}');
   });
   const [bgBlur, setBgBlur] = useState<number>(() => {
-      const saved = localStorage.getItem('bowls_background_blur');
-      return saved ? parseFloat(saved) : 0;
+      return appSettings?.bgBlur || parseFloat(localStorage.getItem('bowls_background_blur') || '0');
   });
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState<number>(() => {
-      const saved = localStorage.getItem('bowls_background_overlay');
-      return saved ? parseFloat(saved) : 0.2;
+      return appSettings?.bgOverlayOpacity || parseFloat(localStorage.getItem('bowls_background_overlay') || '0.2');
   });
   const [showBackgroundModal, setShowBackgroundModal] = useState(false);
-  const [showDatabaseSetup, setShowDatabaseSetup] = useState(false);
-  const [databaseError, setDatabaseError] = useState<string | null>(null);
+  const [showRestoreConfirm, setShowRestoreConfirm] = useState(false);
+  const [restoreData, setRestoreData] = useState<any>(null);
 
-  // Google Drive State
-  const [driveConnected, setDriveConnected] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
+  const clubChampsRef = useRef<ClubChampsHandle>(null);
 
   // UI State
   const [currentView, setCurrentView] = useState<ViewMode>('Member');
@@ -105,56 +100,6 @@ const App: React.FC = () => {
   const [daysUntilNextGame, setDaysUntilNextGame] = useState<number>(0);
   const [daysOverdue, setDaysOverdue] = useState<number>(0);
 
-  // Supabase Initial Load
-  useEffect(() => {
-    const loadSupabaseData = async () => {
-      try {
-        const connection = await supabaseService.checkConnection();
-        if (!connection.success) {
-          if (connection.error === 'TABLES_MISSING') {
-            setShowDatabaseSetup(true);
-          } else {
-            setDatabaseError(connection.error || 'Unknown database error');
-          }
-          return;
-        }
-
-        const [sbPlayers, sbMatches, sbDbMatches, sbClubChamps, sbSettings] = await Promise.all([
-          supabaseService.getPlayers(),
-          supabaseService.getMatches(),
-          supabaseService.getDatabaseMatches(),
-          supabaseService.getClubChamps(),
-          supabaseService.getAppSettings()
-        ]);
-
-        // Sync logic: If Supabase is empty but localStorage has data, push to Supabase
-        if (sbPlayers.length > 0) setPlayers(sbPlayers);
-        else if (players.length > 0) players.forEach(p => supabaseService.upsertPlayer(p));
-
-        if (sbMatches.length > 0) setMatches(sbMatches);
-        else if (matches.length > 0) matches.forEach(m => supabaseService.upsertMatch(m));
-
-        if (sbDbMatches.length > 0) setDatabaseMatches(sbDbMatches);
-        else if (databaseMatches.length > 0) databaseMatches.forEach(m => supabaseService.upsertDatabaseMatch(m));
-
-        if (sbClubChamps.length > 0) setScorecards(sbClubChamps);
-        else if (scorecards.length > 0) scorecards.forEach(sc => supabaseService.upsertClubChamp(sc));
-
-        if (sbSettings) {
-          if (sbSettings.backgroundImage) setBackgroundImage(sbSettings.backgroundImage);
-          if (sbSettings.backgroundScale) setBackgroundScale(sbSettings.backgroundScale);
-          if (sbSettings.bgPosition) setBgPosition(sbSettings.bgPosition);
-          if (sbSettings.bgBlur !== undefined) setBgBlur(sbSettings.bgBlur);
-          if (sbSettings.bgOverlayOpacity !== undefined) setBgOverlayOpacity(sbSettings.bgOverlayOpacity);
-        }
-      } catch (error) {
-        console.error('Failed to load data from Supabase:', error);
-      }
-    };
-
-    loadSupabaseData();
-  }, []);
-
   // Effect to update view mode based on user role
   useEffect(() => {
       if (currentUser) {
@@ -167,7 +112,9 @@ const App: React.FC = () => {
           }
 
           // Check for upcoming Club Champs games
-          if (scorecards.length > 0) {
+          const savedScorecards = localStorage.getItem('bowls_club_champs');
+          if (savedScorecards) {
+              const scorecards: Scorecard[] = JSON.parse(savedScorecards);
               const today = new Date();
               const todayMidnight = new Date(today.setHours(0,0,0,0));
               const fifteenDaysFromNow = new Date(today);
@@ -213,7 +160,7 @@ const App: React.FC = () => {
       } else {
           setShowWarning(false);
       }
-  }, [currentUser, scorecards]);
+  }, [currentUser]);
 
   // Save current user
   useEffect(() => {
@@ -224,28 +171,66 @@ const App: React.FC = () => {
       }
   }, [currentUser]);
 
-  // Initialize Data - REMOVED loading logic as it's now handled in useState
+  // Initialize Data
   useEffect(() => {
-    // Set initial active tab if not set (though useState handles it mostly)
-    if (!activeTab && matches.length > 0) {
-        setActiveTab(matches[0].id);
-    }
+      const loadData = async () => {
+          try {
+              const response = await fetch('/api/github/data');
+              if (response.ok) {
+                  const data = await response.json();
+                  if (data.players) setPlayers(data.players);
+                  if (data.matches) setMatches(data.matches);
+                  if (data.databaseMatches) setDatabaseMatches(data.databaseMatches);
+                  if (data.scorecards) setScorecards(data.scorecards);
+                  if (data.appSettings) setAppSettings(data.appSettings);
+              }
+          } catch (error) {
+              console.error("Failed to load data from GitHub:", error);
+          }
+      };
+      loadData();
+      
+      // Set initial active tab if not set (though useState handles it mostly)
+      if (!activeTab && matches.length > 0) {
+          setActiveTab(matches[0].id);
+      }
   }, []);
 
   // Save on change
   useEffect(() => {
+    const saveData = async () => {
+        try {
+            await fetch('/api/github/data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    data: {
+                        players,
+                        matches,
+                        databaseMatches,
+                        scorecards,
+                        appSettings
+                    }
+                })
+            });
+        } catch (error) {
+            console.error("Failed to save data to GitHub:", error);
+        }
+    };
+
+    // Only save if we have data (avoid overwriting with empty state on initial load)
+    if (players.length > 0 || matches.length > 0) {
+        saveData();
+    }
+
     if (matches.length > 0) {
       localStorage.setItem('bowls_matches', JSON.stringify(matches));
     }
-  }, [matches]);
+  }, [matches, players, databaseMatches, scorecards, appSettings]);
 
   useEffect(() => {
     localStorage.setItem('bowls_database', JSON.stringify(databaseMatches));
   }, [databaseMatches]);
-
-  useEffect(() => {
-    localStorage.setItem('bowls_club_champs', JSON.stringify(scorecards));
-  }, [scorecards]);
 
   useEffect(() => {
       localStorage.setItem('bowls_players', JSON.stringify(players));
@@ -253,109 +238,36 @@ const App: React.FC = () => {
 
   // Save Background Settings
   useEffect(() => {
-      const checkDriveStatus = async () => {
-          try {
-              const res = await fetch('/api/auth/status');
-              const data = await res.json();
-              setDriveConnected(data.connected);
-          } catch (e) {
-              console.error('Failed to check Drive status:', e);
-          }
-      };
-      checkDriveStatus();
-
-      const handleOAuthMessage = (event: MessageEvent) => {
-          if (event.data?.type === 'OAUTH_AUTH_SUCCESS') {
-              setDriveConnected(true);
-              alert('Successfully connected to Google Drive!');
-          }
-      };
-      window.addEventListener('message', handleOAuthMessage);
-      return () => window.removeEventListener('message', handleOAuthMessage);
-  }, []);
-
-  const connectDrive = async () => {
-      try {
-          const res = await fetch('/api/auth/google/url');
-          const { url } = await res.json();
-          window.open(url, 'google_oauth', 'width=600,height=700');
-      } catch (e) {
-          console.error('Failed to get auth URL:', e);
-          alert('Failed to connect to Google Drive. Please try again.');
-      }
-  };
-
-  const syncToDrive = async (dataToSync?: Match[]) => {
-      if (!driveConnected) {
-          if (confirm('Google Drive is not connected. Would you like to connect now?')) {
-              connectDrive();
-          }
-          return;
-      }
-
-      setIsSyncing(true);
-      try {
-          const res = await fetch('/api/drive/upload', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  data: dataToSync || databaseMatches,
-                  filename: 'bowls_database_backup.json'
-              })
-          });
-          
-          if (res.ok) {
-              console.log('Successfully synced to Google Drive');
-          } else {
-              const error = await res.json();
-              if (res.status === 401) {
-                  setDriveConnected(false);
-                  alert('Google Drive session expired. Please reconnect.');
-              } else {
-                  console.error('Sync failed:', error);
-              }
-          }
-      } catch (e) {
-          console.error('Failed to sync to Drive:', e);
-      } finally {
-          setIsSyncing(false);
-      }
-  };
-
-  useEffect(() => {
+      setAppSettings(prev => ({
+          ...prev,
+          backgroundImage,
+          backgroundScale,
+          bgPosition,
+          bgBlur,
+          bgOverlayOpacity
+      }));
+      
       try {
           if (backgroundImage) {
               localStorage.setItem('bowls_background_image', backgroundImage);
-              supabaseService.upsertAppSettings({ backgroundImage });
           } else {
               localStorage.removeItem('bowls_background_image');
-              supabaseService.upsertAppSettings({ backgroundImage: null });
           }
       } catch (e) {
           console.error('Failed to save background image to localStorage:', e);
-          // If it's a quota error, we might want to warn the user, but for now just log it
       }
-  }, [backgroundImage]);
-
-  useEffect(() => {
       localStorage.setItem('bowls_background_scale', backgroundScale.toString());
-      supabaseService.upsertAppSettings({ backgroundScale });
-  }, [backgroundScale]);
-
-  useEffect(() => {
       localStorage.setItem('bowls_background_position', JSON.stringify(bgPosition));
-      supabaseService.upsertAppSettings({ bgPosition });
-  }, [bgPosition]);
-
-  useEffect(() => {
       localStorage.setItem('bowls_background_blur', bgBlur.toString());
-      supabaseService.upsertAppSettings({ bgBlur });
-  }, [bgBlur]);
-
-  useEffect(() => {
       localStorage.setItem('bowls_background_overlay', bgOverlayOpacity.toString());
-      supabaseService.upsertAppSettings({ bgOverlayOpacity });
-  }, [bgOverlayOpacity]);
+      localStorage.setItem('bowls_app_settings', JSON.stringify({
+          backgroundImage,
+          backgroundScale,
+          bgPosition,
+          bgBlur,
+          bgOverlayOpacity
+      }));
+  }, [backgroundImage, backgroundScale, bgPosition, bgBlur, bgOverlayOpacity]);
 
   // Redirect Members away from Admin-only tabs (Players, Database) and un-emailed matches
   useEffect(() => {
@@ -376,7 +288,6 @@ const App: React.FC = () => {
 
   const handleMatchUpdate = (updatedMatch: Match) => {
     setMatches(prev => prev.map(m => m.id === updatedMatch.id ? updatedMatch : m));
-    supabaseService.upsertMatch(updatedMatch);
     
     // If a match was just confirmed, switch to its tab
     const oldMatch = matches.find(m => m.id === updatedMatch.id);
@@ -388,10 +299,80 @@ const App: React.FC = () => {
     }
   };
 
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [commitMessage, setCommitMessage] = useState<string | null>(null);
+
+  const handleExportAllData = () => {
+    const allData = {
+        matches,
+        databaseMatches,
+        scorecards,
+        appSettings,
+        players,
+        exportDate: new Date().toISOString(),
+        version: '1.0.0'
+    };
+    
+    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `bowls_manager_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    setCommitMessage('Backup downloaded successfully! You can now upload this file to your Google Drive.');
+    setTimeout(() => setCommitMessage(null), 5000);
+  };
+
+  const handleImportAllData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const data = JSON.parse(event.target?.result as string);
+            
+            // Basic validation
+            if (!data.matches || !data.players) {
+                throw new Error('Invalid backup file format.');
+            }
+
+            setRestoreData(data);
+            setShowRestoreConfirm(true);
+        } catch (error) {
+            console.error('Import failed:', error);
+            setCommitMessage('Failed to restore backup. Please ensure the file is a valid JSON backup.');
+            setTimeout(() => setCommitMessage(null), 5000);
+        }
+    };
+    reader.readAsText(file);
+    // Reset the input so the same file can be uploaded again if needed
+    e.target.value = '';
+  };
+
+  const confirmRestore = () => {
+    if (!restoreData) return;
+    
+    setMatches(restoreData.matches);
+    setDatabaseMatches(restoreData.databaseMatches || []);
+    setScorecards(restoreData.scorecards || []);
+    setAppSettings(restoreData.appSettings || {});
+    setPlayers(restoreData.players);
+    
+    setCommitMessage('Data restored successfully!');
+    setTimeout(() => setCommitMessage(null), 5000);
+    setActiveTab('AddNewMatch');
+    setShowRestoreConfirm(false);
+    setRestoreData(null);
+  };
+
   const handleRemoveMatch = (id: string) => {
     const newMatches = matches.filter(m => m.id !== id);
     setMatches(newMatches);
-    supabaseService.deleteMatch(id);
     
     // If we deleted the active tab, switch to the first available match or Database
     if (activeTab === id) {
@@ -413,17 +394,13 @@ const App: React.FC = () => {
 
     setDatabaseMatches(prev => {
         // Add new record at the BEGINNING (top)
-        const newDatabase = [snapshot, ...prev];
-        supabaseService.upsertDatabaseMatch(snapshot);
-        // Automatically sync to Drive
-        syncToDrive(newDatabase);
-        return newDatabase;
+        return [snapshot, ...prev];
     });
 
     // 2. Clear scores in Live Match
     setMatches(prev => prev.map(m => {
         if (m.id === matchToCommit.id) {
-            const updatedMatch = {
+            return {
                 ...m,
                 disciplines: m.disciplines.map(d => ({
                     ...d,
@@ -431,39 +408,38 @@ const App: React.FC = () => {
                     pointsAgainst: ''
                 }))
             };
-            supabaseService.upsertMatch(updatedMatch);
-            return updatedMatch;
         }
         return m;
     }));
 
-    alert('Results saved to Database and scores cleared.');
+    setCommitMessage('Results saved to Database and scores cleared.');
+    setTimeout(() => setCommitMessage(null), 3000);
   };
 
   const restoreDefaultTabs = () => {
-      if (confirm('This will reset all tabs to the default empty state. Unsaved data in the current tabs will be lost. Database entries are safe. Continue?')) {
-          const defaultMatch: Match = {
-              ...INITIAL_MATCH,
-              id: `match-${Date.now()}`
-          };
-          setMatches([defaultMatch]);
-          setActiveTab(defaultMatch.id);
-      }
+      setShowResetConfirm(true);
+  };
+
+  const confirmRestoreDefaultTabs = () => {
+      const defaultMatch: Match = {
+          ...INITIAL_MATCH,
+          id: `match-${Date.now()}`
+      };
+      setMatches([defaultMatch]);
+      setActiveTab(defaultMatch.id);
+      setShowResetConfirm(false);
   };
 
   const handleAddPlayer = (player: Player) => {
       setPlayers(prev => [...prev, player]);
-      supabaseService.upsertPlayer(player);
   };
 
   const handleRemovePlayer = (id: string) => {
       setPlayers(prev => prev.filter(p => p.id !== id));
-      supabaseService.deletePlayer(id);
   };
 
   const handleUpdatePlayer = (updatedPlayer: Player) => {
       setPlayers(prev => prev.map(p => p.id === updatedPlayer.id ? updatedPlayer : p));
-      supabaseService.upsertPlayer(updatedPlayer);
       if (currentUser && currentUser.id === updatedPlayer.id) {
           setCurrentUser(updatedPlayer);
       }
@@ -597,7 +573,8 @@ const App: React.FC = () => {
 
   const handleLogin = (user: Player) => {
       setCurrentUser(user);
-      alert(`Welcome Back ${user.name}`);
+      setCommitMessage(`Welcome Back ${user.name}`);
+      setTimeout(() => setCommitMessage(null), 3000);
   };
 
   const handleLogout = () => {
@@ -622,7 +599,6 @@ const App: React.FC = () => {
   const handleImportMatches = (newMatches: Match[]) => {
       setDatabaseMatches(prev => {
           const updated = [...prev, ...newMatches];
-          newMatches.forEach(m => supabaseService.upsertDatabaseMatch(m));
           return updated;
       });
   };
@@ -630,23 +606,77 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen font-sans relative">
       
-      {showDatabaseSetup && (
-          <DatabaseSetup onClose={() => setShowDatabaseSetup(false)} />
-      )}
-
-      {databaseError && (
-          <div className="fixed bottom-4 right-4 z-[100] bg-red-600 text-white p-4 rounded-xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right-4">
-              <AlertTriangle className="w-6 h-6" />
-              <div>
-                  <p className="font-bold">Database Connection Error</p>
-                  <p className="text-xs text-red-100">{databaseError}</p>
-              </div>
-              <button onClick={() => setDatabaseError(null)} className="p-1 hover:bg-white/10 rounded-full">
-                  <X className="w-4 h-4" />
-              </button>
+      {/* Commit Message Toast */}
+      {commitMessage && (
+          <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl z-[100] animate-in fade-in slide-in-from-bottom-4 flex items-center gap-2">
+              <Check className="w-5 h-5" />
+              <span className="font-bold">{commitMessage}</span>
           </div>
       )}
 
+      {/* Restore Confirmation Modal */}
+      {showRestoreConfirm && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in">
+              <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-orange-100">
+                  <div className="p-8 text-center">
+                      <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <Upload className="w-10 h-10 text-orange-600" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Restore Backup?</h3>
+                      <p className="text-gray-600 mb-8">
+                          This will overwrite all current matches, players, and settings with the data from the backup file. This action cannot be undone.
+                      </p>
+                      <div className="flex flex-col gap-3">
+                          <button
+                              onClick={confirmRestore}
+                              className="w-full py-4 bg-orange-600 text-white rounded-2xl font-bold hover:bg-orange-700 transition-all shadow-lg shadow-orange-200"
+                          >
+                              Yes, Restore All Data
+                          </button>
+                          <button
+                              onClick={() => {
+                                  setShowRestoreConfirm(false);
+                                  setRestoreData(null);
+                              }}
+                              className="w-full py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all"
+                          >
+                              Cancel
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Reset Confirmation Modal */}
+      {showResetConfirm && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 fade-in">
+                  <div className="flex items-center gap-3 text-red-600 mb-4">
+                      <AlertTriangle className="w-8 h-8" />
+                      <h3 className="text-xl font-black uppercase tracking-tight">Reset All Tabs?</h3>
+                  </div>
+                  <p className="text-gray-600 mb-6 font-medium leading-relaxed">
+                      This will reset all tabs to the default empty state. <span className="text-red-600 font-bold">Unsaved data in the current tabs will be lost.</span> Database entries are safe.
+                  </p>
+                  <div className="flex gap-3">
+                      <button 
+                          onClick={confirmRestoreDefaultTabs}
+                          className="flex-1 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg hover:shadow-red-200"
+                      >
+                          Yes, Reset Everything
+                      </button>
+                      <button 
+                          onClick={() => setShowResetConfirm(false)}
+                          className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all"
+                      >
+                          Cancel
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
+      
       {/* Background Image Layer */}
       {backgroundImage && (
           <div className="fixed inset-0 -z-10 overflow-hidden bg-gray-100">
@@ -684,8 +714,8 @@ const App: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-6">
                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-bowls-darkGreen font-bold border-2 border-bowls-green">B</div>
-                  <span className="font-bold text-xl tracking-wide hidden sm:inline-block">BowlsManager</span>
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-bowls-darkGreen font-bold border-2 border-bowls-green shadow-[0_0_10px_rgba(34,197,94,0.5)]">B</div>
+                  <span className="font-bold text-xl tracking-wide hidden sm:inline-block text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.8)]">BowlsManager</span>
                </div>
 
                {(currentView === 'Admin' || currentView === 'Admin Editor') && (
@@ -693,10 +723,20 @@ const App: React.FC = () => {
                         onClick={() => {
                             setActiveTab('AddNewMatch');
                         }}
-                        className="flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold text-bowls-darkGreen bg-white hover:bg-gray-100 transition-colors shadow-md border-2 border-bowls-green"
+                        className="flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-[0_0_15px_rgba(37,99,235,0.5)] border-2 border-blue-400 hover:scale-105 active:scale-95"
                         title="Add New Match Page"
                     >
                         <Plus className="w-4 h-4 mr-2" /> <span>Add New Match Page</span>
+                    </button>
+                )}
+
+               {activeTab === 'ClubChamps' && currentView !== 'Member' && (
+                    <button
+                        onClick={() => clubChampsRef.current?.addScorecard()}
+                        className="flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold text-bowls-darkGreen bg-white hover:bg-gray-100 transition-colors shadow-md border-2 border-dashed border-bowls-darkGreen/30"
+                        title="Add Another Scorecard"
+                    >
+                        <Plus className="w-4 h-4 mr-2" /> <span>Add Another Scorecard</span>
                     </button>
                 )}
             </div>
@@ -723,13 +763,6 @@ const App: React.FC = () => {
                             title="Restore Default Tabs"
                         >
                             <RefreshCw className="w-3 h-3" /> Restore
-                        </button>
-                        <button
-                            onClick={() => setShowDatabaseSetup(true)}
-                            className="px-3 py-1 text-xs font-bold rounded-md text-white bg-emerald-500 hover:bg-emerald-600 transition-colors flex items-center gap-1 shadow-sm mr-2"
-                            title="Database Setup"
-                        >
-                            <Database className="w-3 h-3" /> DB Setup
                         </button>
                       </>
                   )}
@@ -899,6 +932,21 @@ const App: React.FC = () => {
                             Database
                         </button>
                     )}
+
+                    {/* Admin Only: Settings Tab */}
+                    {(currentView === 'Admin' || currentView === 'Admin Editor') && (
+                        <button
+                            onClick={() => setActiveTab('Settings')}
+                            className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap border ${
+                                activeTab === 'Settings' 
+                                ? 'bg-gray-100 text-gray-900 border-gray-300 ring-2 ring-gray-400 ring-offset-1' 
+                                : 'bg-white text-gray-500 border-transparent hover:bg-gray-50 hover:text-gray-700'
+                            }`}
+                        >
+                            <Settings className="w-4 h-4 mr-2" />
+                            Settings
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
@@ -928,7 +976,7 @@ const App: React.FC = () => {
                             </h2>
                             <button
                                 onClick={createNewMatch}
-                                className="flex items-center gap-2 px-6 py-2 bg-bowls-darkGreen text-white rounded-lg font-bold hover:bg-bowls-green transition-colors shadow-md"
+                                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.6)] border border-blue-400 hover:scale-105 active:scale-95"
                             >
                                 <Plus className="w-5 h-5" /> Add New Match
                             </button>
@@ -975,7 +1023,7 @@ const App: React.FC = () => {
                             <p className="text-gray-500 mb-6">Click "Add New Match" to create a new match.</p>
                             <button
                                 onClick={createNewMatch}
-                                className="px-6 py-2 bg-bowls-darkGreen text-white rounded-lg font-bold hover:bg-bowls-green transition-colors"
+                                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.6)] border border-blue-400 hover:scale-105 active:scale-95"
                             >
                                 Add New Match
                             </button>
@@ -984,12 +1032,13 @@ const App: React.FC = () => {
                 </div>
             ) : activeTab === 'ClubChamps' ? (
                 <ClubChamps 
+                    ref={clubChampsRef}
                     players={players} 
+                    scorecards={scorecards}
+                    setScorecards={setScorecards}
                     onCommitResults={handleCommitResults}
                     viewMode={currentView}
                     currentUser={currentUser}
-                    scorecards={scorecards}
-                    setScorecards={setScorecards}
                 />
             ) : activeTab === 'Availability' ? (
                 <PlayerAvailability 
@@ -1016,11 +1065,77 @@ const App: React.FC = () => {
                     }}
                     onImportMatches={handleImportMatches}
                     onAddPlayer={handleAddPlayer}
-                    driveConnected={driveConnected}
-                    isSyncing={isSyncing}
-                    onConnectDrive={connectDrive}
-                    onSyncToDrive={() => syncToDrive()}
                 />
+            ) : activeTab === 'Settings' && (currentView === 'Admin' || currentView === 'Admin Editor') ? (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2 mb-6">
+                            <Settings className="w-6 h-6 text-bowls-darkGreen" />
+                            System Settings
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Backup & Export */}
+                            <div className="space-y-4 p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
+                                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <Download className="w-5 h-5 text-blue-600" />
+                                    Backup & Export
+                                </h3>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                    Download a complete backup of all application data (matches, players, scorecards, and settings). 
+                                    You can use this file to restore your data on another account or keep it as a safe copy on Google Drive.
+                                </p>
+                                <button
+                                    onClick={handleExportAllData}
+                                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 hover:scale-105 active:scale-95"
+                                >
+                                    <Download className="w-5 h-5" />
+                                    Download Full Backup (.json)
+                                </button>
+                            </div>
+
+                            {/* Restore Data */}
+                            <div className="space-y-4 p-6 bg-orange-50/50 rounded-2xl border border-orange-100">
+                                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <Upload className="w-5 h-5 text-orange-600" />
+                                    Restore Data
+                                </h3>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                    Upload a previously exported backup file to restore all application data. 
+                                    <span className="text-red-600 font-bold"> Warning: This will overwrite all current data.</span>
+                                </p>
+                                <label className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-bold hover:border-orange-500 hover:text-orange-600 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95">
+                                    <Upload className="w-5 h-5" />
+                                    Upload Backup File
+                                    <input 
+                                        type="file" 
+                                        accept=".json" 
+                                        onChange={handleImportAllData} 
+                                        className="hidden" 
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Reset Section */}
+                    <div className="bg-red-50 p-8 rounded-2xl border border-red-200">
+                        <h3 className="text-lg font-bold text-red-800 flex items-center gap-2 mb-4">
+                            <AlertTriangle className="w-5 h-5" />
+                            Danger Zone
+                        </h3>
+                        <p className="text-sm text-red-600 mb-6">
+                            Resetting the application will clear all local data and restore the default mock players and matches. 
+                            This action cannot be undone unless you have a backup.
+                        </p>
+                        <button
+                            onClick={() => setShowResetConfirm(true)}
+                            className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg shadow-red-200 hover:scale-105 active:scale-95"
+                        >
+                            Reset Application Data
+                        </button>
+                    </div>
+                </div>
             ) : (
                 <div className="flex flex-col items-center justify-center py-20 bg-white/90 backdrop-blur-sm rounded-xl shadow border border-dashed border-gray-300">
                     <p className="text-gray-500 mb-4">No matches selected.</p>
@@ -1203,7 +1318,7 @@ const App: React.FC = () => {
                       </button>
                       <button 
                           onClick={() => setShowBackgroundModal(false)}
-                          className="px-6 py-2 bg-bowls-darkGreen text-white rounded-lg font-bold hover:bg-bowls-green transition-colors shadow-md"
+                          className="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-[0_0_15px_rgba(37,99,235,0.5)] border border-blue-400 hover:scale-105 active:scale-95"
                       >
                           Done
                       </button>

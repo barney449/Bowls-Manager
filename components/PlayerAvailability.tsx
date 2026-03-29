@@ -98,6 +98,9 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
 
   const otherUnavailable = getOtherUnavailablePlayers();
 
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
   return (
     <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 pb-20">
       
@@ -105,7 +108,7 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
         {/* Left Column: Manage My Unavailability */}
         <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-                <div className="relative bg-bowls-darkGreen p-8 border-b border-gray-200 rounded-t-xl overflow-hidden">
+                <div className="relative bg-green-600 p-8 border-b border-gray-200 rounded-t-xl overflow-hidden">
                     <div className="absolute inset-0 opacity-20">
                         <img 
                             src="https://images.unsplash.com/photo-1585822736279-56a735f73022?q=80&w=2070&auto=format&fit=crop" 
@@ -129,7 +132,7 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                         <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
                              <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wider flex items-center gap-2">
-                                <Plus className="w-4 h-4 text-bowls-green" />
+                                <Plus className="w-4 h-4 text-green-500" />
                                 Add New Period
                              </h3>
                         </div>
@@ -143,11 +146,11 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                                         onClick={() => setAbsenceType(type)}
                                         className={`relative overflow-hidden group py-4 px-2 rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-2 ${
                                             absenceType === type 
-                                            ? 'border-bowls-darkGreen bg-bowls-darkGreen/5 text-bowls-darkGreen' 
-                                            : 'border-gray-100 hover:border-bowls-green/30 hover:bg-gray-50 text-gray-500'
+                                            ? 'border-green-600 bg-green-600/5 text-green-600' 
+                                            : 'border-gray-100 hover:border-green-500/30 hover:bg-gray-50 text-gray-500'
                                         }`}
                                     >
-                                        <div className={`p-2 rounded-full ${absenceType === type ? 'bg-bowls-darkGreen text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-white group-hover:text-bowls-green transition-colors'}`}>
+                                        <div className={`p-2 rounded-full ${absenceType === type ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-white group-hover:text-green-500 transition-colors'}`}>
                                             {type === 'Part Day' && <Clock className="w-5 h-5" />}
                                             {type === 'Full Day' && <Calendar className="w-5 h-5" />}
                                             {type === 'Multi-Day' && <ArrowRight className="w-5 h-5" />}
@@ -163,13 +166,13 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                                         {absenceType === 'Multi-Day' ? 'Start Date' : 'Date'}
                                     </label>
                                     <div className="relative group">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-bowls-green/5 to-blue-500/5 rounded-lg -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-blue-500/5 rounded-lg -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <input 
                                             type="date" 
                                             value={startDate}
                                             onChange={(e) => setStartDate(e.target.value)}
-                                            className="w-full rounded-lg border-gray-300 border-2 p-3 focus:ring-0 focus:border-bowls-darkGreen shadow-sm bg-white/50 backdrop-blur-sm transition-colors cursor-pointer"
-                                            min={new Date().toISOString().split('T')[0]}
+                                            className="w-full rounded-lg border-gray-300 border-2 p-3 focus:ring-0 focus:border-green-600 shadow-sm bg-white/50 backdrop-blur-sm transition-colors cursor-pointer"
+                                            min={todayStr}
                                         />
                                     </div>
                                 </div>
@@ -182,8 +185,8 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                                                 type="date" 
                                                 value={endDate}
                                                 onChange={(e) => setEndDate(e.target.value)}
-                                                className="w-full rounded-lg border-gray-300 border-2 p-3 focus:ring-0 focus:border-bowls-darkGreen shadow-sm bg-white/50 backdrop-blur-sm transition-colors cursor-pointer"
-                                                min={startDate || new Date().toISOString().split('T')[0]}
+                                                className="w-full rounded-lg border-gray-300 border-2 p-3 focus:ring-0 focus:border-green-600 shadow-sm bg-white/50 backdrop-blur-sm transition-colors cursor-pointer"
+                                                min={startDate || todayStr}
                                             />
                                         </div>
                                     </div>
@@ -194,7 +197,7 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Time of Day</label>
                                         <div className="grid grid-cols-2 gap-4">
                                             {(['Morning', 'Afternoon'] as const).map(type => (
-                                                <label key={type} className={`cursor-pointer relative overflow-hidden rounded-xl border-2 p-4 flex items-center justify-center gap-3 transition-all ${partDayType === type ? 'border-bowls-darkGreen bg-bowls-darkGreen/5' : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'}`}>
+                                                <label key={type} className={`cursor-pointer relative overflow-hidden rounded-xl border-2 p-4 flex items-center justify-center gap-3 transition-all ${partDayType === type ? 'border-green-600 bg-green-600/5' : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'}`}>
                                                     <input 
                                                         type="radio" 
                                                         name="partDayType" 
@@ -214,10 +217,10 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                                                             className="w-full h-full object-cover"
                                                         />
                                                     </div>
-                                                    <div className={`relative z-10 p-2 rounded-full ${partDayType === type ? 'bg-bowls-darkGreen text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                                    <div className={`relative z-10 p-2 rounded-full ${partDayType === type ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
                                                         <Clock className="w-4 h-4" />
                                                     </div>
-                                                    <span className={`relative z-10 font-bold ${partDayType === type ? 'text-bowls-darkGreen' : 'text-gray-600'}`}>{type}</span>
+                                                    <span className={`relative z-10 font-bold ${partDayType === type ? 'text-green-600' : 'text-gray-600'}`}>{type}</span>
                                                 </label>
                                             ))}
                                         </div>
@@ -228,7 +231,7 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                             <button 
                                 onClick={handleAddPeriod}
                                 disabled={!startDate || (absenceType === 'Multi-Day' && !endDate)}
-                                className="w-full bg-bowls-darkGreen text-white px-6 py-4 rounded-xl font-bold hover:bg-bowls-green transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 shadow-lg shadow-bowls-green/20"
+                                className="w-full bg-green-600 text-white px-6 py-4 rounded-xl font-bold hover:bg-green-700 transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 shadow-lg shadow-green-600/20"
                             >
                                 <Plus className="w-5 h-5" />
                                 Add Unavailable Period
@@ -256,7 +259,7 @@ const PlayerAvailability: React.FC<PlayerAvailabilityProps> = ({ currentUser, pl
                                     if (isPast) return null;
 
                                     return (
-                                        <div key={period.id} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-bowls-green/50 transition-colors group">
+                                        <div key={period.id} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-green-500/50 transition-colors group">
                                             <div className="flex items-center gap-4">
                                                 <div className={`p-3 rounded-lg ${period.type === 'All Day' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'}`}>
                                                     <Calendar className="w-5 h-5" />

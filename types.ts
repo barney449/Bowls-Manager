@@ -1,6 +1,6 @@
 export type Availability = 'Yes' | 'No' | 'Ongoing' | 'Unset';
 
-export type UserRole = 'Admin' | 'Admin Editor' | 'Member' | 'Pending';
+export type UserRole = 'Admin' | 'Admin Editor' | 'Member' | 'Active Member' | 'Pending';
 
 export type AvailabilityType = 'All Day' | 'Morning' | 'Afternoon';
 
@@ -61,22 +61,26 @@ export interface Scorecard {
     competition: string;
     selectedType: DisciplineType;
     playByDate: string;
-    playedOnDate?: string;
-    playedOnTime?: string;
     isHome: boolean;
     teamA: DisciplineInstance;
     teamB: DisciplineInstance;
+    isNew?: boolean;
+    isEditing?: boolean;
+    agreedPlayDate?: string;
+    startTime?: string;
+    isConfirmed?: boolean;
 }
 
 export interface ChatMessage {
   id: string;
   scorecardId: string;
-  playerId: string;
-  playerName: string;
-  playerAvatar: string;
+  authorId: string;
+  authorName: string;
   text: string;
-  timestamp: string; // ISO string
+  timestamp: string;
   isSystem?: boolean;
+  playerName?: string;
+  playerAvatar?: string;
 }
 
 export type ViewMode = 'Admin' | 'Admin Editor' | 'Member' | 'Database';

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorecard Comment System Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb;
+            border-radius: 10px;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8 font-sans">
+
+    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+        <!-- Scorecard Header (Mock) -->
+        <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
+            <div>
+                <h3 class="font-bold text-gray-800">Scorecard #1</h3>
+                <p class="text-[10px] text-gray-500 uppercase font-black">Club Championships</p>
+            </div>
+            <div class="bg-green-100 p-2 rounded-full">
+                <i data-lucide="trophy" class="w-4 h-4 text-green-600"></i>
+            </div>
+        </div>
+
+        <!-- Scorecard Content (Mock) -->
+        <div class="p-6 space-y-4">
+            <div class="flex justify-between items-center bg-blue-50/50 p-3 rounded-xl border border-blue-100">
+                <div class="text-center flex-1">
+                    <p class="text-[10px] font-black text-blue-800">TEAM A</p>
+                    <p class="text-lg font-bold">12</p>
+                </div>
+                <div class="px-4 font-black text-gray-300">VS</div>
+                <div class="text-center flex-1">
+                    <p class="text-[10px] font-black text-red-800">TEAM B</p>
+                    <p class="text-lg font-bold">8</p>
+                </div>
+            </div>
+
+            <!-- COMMENT SYSTEM -->
+            <div class="w-full mt-4 border-t pt-4">
+                <div class="flex items-center gap-2 mb-3 text-gray-600">
+                    <i data-lucide="message-square" class="w-4 h-4"></i>
+                    <span class="text-xs font-bold uppercase tracking-wider">Player Comments</span>
+                </div>
+
+                <!-- Scrollable Comment List -->
+                <div id="commentList" class="h-[180px] overflow-y-auto mb-4 space-y-3 pr-2 scrollbar-thin">
+                    <!-- Comments will be injected here -->
+                </div>
+
+                <!-- Input Area -->
+                <div class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="commentInput"
+                        placeholder="Add a comment..." 
+                        class="flex-1 text-[11px] bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-green-600"
+                    >
+                    <button 
+                        onclick="addComment()"
+                        class="bg-green-700 text-white p-2 rounded-lg hover:bg-green-800 transition-colors"
+                    >
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <p id="accessWarning" class="text-[9px] text-red-500 mt-1 font-medium hidden">
+                    Only players in this scorecard can comment.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="max-w-md mx-auto mt-8 bg-blue-50 p-4 rounded-xl border border-blue-100">
+        <h4 class="text-xs font-bold text-blue-800 uppercase mb-2">How to test:</h4>
+        <ul class="text-[11px] text-blue-700 space-y-1 list-disc pl-4">
+            <li>Try typing "See you on <b>Friday</b>" or "<b>Saturday</b> game".</li>
+            <li>The system detects weekdays and checks for player unavailability.</li>
+            <li><b>John Doe</b> is unavailable this <b>Friday</b>.</li>
+            <li><b>Jane Smith</b> is unavailable this <b>Saturday</b>.</li>
+            <li>Only players in the list (John Doe, Jane Smith, etc.) can post.</li>
+        </ul>
+    </div>
+
+    <script>
+        // MOCK DATA
+        const CURRENT_USER = {
+            name: "John Doe",
+            image: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+        };
+
+        const SCORECARD_PLAYERS = ["John Doe", "Jane Smith", "Bob Brown", "Alice Green"];
+
+        const MOCK_UNAVAILABILITY = [
+            { name: "John Doe", date: "2026-03-27" }, // Friday
+            { name: "Jane Smith", date: "2026-03-28" } // Saturday
+        ];
+
+        // INITIALIZE
+        let comments = JSON.parse(localStorage.getItem('preview_comments')) || [
+            {
+                name: "Alice Green",
+                image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alice",
+                text: "Looking forward to the match!",
+                date: new Date(Date.now() - 3600000).toISOString()
+            }
+        ];
+
+        function renderComments() {
+            const list = document.getElementById('commentList');
+            list.innerHTML = '';
+
+            if (comments.length === 0) {
+                list.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-gray-400 opacity-50">
+                        <i data-lucide="message-square" class="w-8 h-8 mb-1"></i>
+                        <p class="text-[10px]">No comments yet</p>
+                    </div>
+                `;
+            } else {
+                comments.forEach(c => {
+                    const isSystem = c.name === "Bowls Manager";
+                    const div = document.createElement('div');
+                    div.className = `flex gap-2 p-2 rounded-lg transition-all ${isSystem ? 'bg-orange-100 border border-orange-200' : 'bg-gray-50'}`;
+                    div.innerHTML = `
+                        <img src="${c.image}" class="w-8 h-8 rounded-full border border-gray-200 bg-white">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-0.5">
+                                <span class="text-[10px] font-black truncate ${isSystem ? 'text-orange-800' : 'text-gray-700'}">${c.name}</span>
+                                <span class="text-[8px] text-gray-400 whitespace-nowrap">${new Date(c.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                            <p class="text-[11px] leading-relaxed break-words ${isSystem ? 'text-orange-900 font-medium' : 'text-gray-600'}">${c.text}</p>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+            
+            // Re-render icons
+            lucide.createIcons();
+            
+            // Auto-scroll
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function getNextWeekdayDate(dayName) {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const now = new Date();
+            const todayIndex = now.getDay();
+            const targetIndex = days.indexOf(dayName.toLowerCase());
+            if (targetIndex === -1) return null;
+            
+            let diff = targetIndex - todayIndex;
+            if (diff <= 0) diff += 7;
+            
+            const nextDate = new Date(now);
+            nextDate.setDate(now.getDate() + diff);
+            return nextDate.toISOString().split('T')[0];
+        }
+
+        function addComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+
+            // Access Control
+            if (!SCORECARD_PLAYERS.includes(CURRENT_USER.name)) {
+                document.getElementById('accessWarning').classList.remove('hidden');
+                return;
+            }
+
+            const newComment = {
+                name: CURRENT_USER.name,
+                image: CURRENT_USER.image,
+                text: text,
+                date: new Date().toISOString()
+            };
+
+            comments.push(newComment);
+
+            // Smart Date Detection
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const words = text.toLowerCase().split(/\W+/);
+            
+            let detectedDate = null;
+            for (const word of words) {
+                if (days.includes(word)) {
+                    detectedDate = getNextWeekdayDate(word);
+                    break;
+                }
+            }
+
+            // Unavailability Check
+            if (detectedDate) {
+                const unavailable = MOCK_UNAVAILABILITY.find(u => u.date === detectedDate && SCORECARD_PLAYERS.includes(u.name));
+                if (unavailable) {
+                    comments.push({
+                        name: "Bowls Manager",
+                        image: "https://api.dicebear.com/7.x/bottts/svg?seed=manager",
+                        text: `Select the player who is away — ${unavailable.name} is unavailable on ${detectedDate}.`,
+                        date: new Date().toISOString()
+                    });
+                }
+            }
+
+            localStorage.setItem('preview_comments', JSON.stringify(comments));
+            input.value = '';
+            renderComments();
+        }
+
+        // Handle Enter key
+        document.getElementById('commentInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                addComment();
+            }
+        });
+
+        // Initial render
+        renderComments();
+    </script>
+</body>
+</html>

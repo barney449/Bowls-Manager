@@ -6,26 +6,25 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build",
-    "start": "node server.ts",
+    "start": "tsx server.ts",
     "preview": "vite preview",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.42.0",
-    "@supabase/supabase-js": "^2.100.0",
     "@tailwindcss/vite": "^4.2.2",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.18.2",
     "@types/react-avatar-editor": "^13.0.4",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "framer-motion": "^12.38.0",
-    "google-auth-library": "^10.6.1",
-    "googleapis": "^171.4.0",
     "lucide-react": "^0.574.0",
     "motion": "^12.38.0",
+    "octokit": "^5.0.5",
     "react": "^19.2.4",
     "react-avatar-editor": "^14.0.0",
     "react-dom": "^19.2.4",
@@ -38,6 +37,7 @@
     "ws": "^8.20.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.14.0",
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^5.0.0",

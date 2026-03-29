@@ -9,10 +9,6 @@ interface DatabaseViewProps {
   onDeleteMatch?: (matchId: string) => void;
   onImportMatches?: (matches: Match[]) => void;
   onAddPlayer?: (player: Player) => void;
-  driveConnected?: boolean;
-  isSyncing?: boolean;
-  onConnectDrive?: () => void;
-  onSyncToDrive?: () => void;
 }
 
 const DatabaseView: React.FC<DatabaseViewProps> = ({ 
@@ -21,16 +17,14 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
   onUpdateMatch, 
   onDeleteMatch, 
   onImportMatches, 
-  onAddPlayer,
-  driveConnected,
-  isSyncing,
-  onConnectDrive,
-  onSyncToDrive
+  onAddPlayer
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState('');
   const [selectedMatchIds, setSelectedMatchIds] = useState<Set<string>>(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [importStatus, setImportStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
   const [editValues, setEditValues] = useState<{
       date: string;
@@ -179,6 +173,10 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
 
       if (remainingDisciplines.length === 0) {
           if (onDeleteMatch) onDeleteMatch(matchId);
+          // Clear from selection if it was selected
+          const newSelection = new Set(selectedMatchIds);
+          newSelection.delete(matchId);
+          setSelectedMatchIds(newSelection);
       } else {
           if (onUpdateMatch) {
               onUpdateMatch({
@@ -220,13 +218,15 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
 
   const handleBulkDelete = () => {
       if (selectedMatchIds.size === 0) return;
-      
-      if (confirm(`Are you sure you want to delete ${selectedMatchIds.size} matches? This cannot be undone.`)) {
-          selectedMatchIds.forEach(id => {
-              if (onDeleteMatch) onDeleteMatch(id);
-          });
-          setSelectedMatchIds(new Set());
-      }
+      setIsDeleting(true);
+  };
+
+  const confirmBulkDelete = () => {
+      selectedMatchIds.forEach(id => {
+          if (onDeleteMatch) onDeleteMatch(id);
+      });
+      setSelectedMatchIds(new Set());
+      setIsDeleting(false);
   };
 
   const handleImport = () => {
@@ -358,7 +358,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                                   id: `imp-pl-${Date.now()}-${Math.random()}-${idx}`,
                                   name: normalizedName,
                                   email: '',
-                                  role: 'Member',
+                                  role: 'Active Member',
                                   status: 'Active',
                                   avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(normalizedName)}&background=random`,
                                   isApproved: true
@@ -404,16 +404,24 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
       // Add new players
       if (onAddPlayer && newPlayersToAdd.length > 0) {
           newPlayersToAdd.forEach(p => onAddPlayer(p));
-          alert(`Added ${newPlayersToAdd.length} new players.`);
       }
 
       if (onImportMatches && newMatches.length > 0) {
           onImportMatches(newMatches);
-          setShowImport(false);
-          setImportText('');
-          alert(`Successfully imported ${newMatches.length} matches.`);
+          setImportStatus({ 
+              message: `Successfully imported ${newMatches.length} matches and created ${newPlayersToAdd.length} new players.`, 
+              type: 'success' 
+          });
+          setTimeout(() => {
+              setShowImport(false);
+              setImportText('');
+              setImportStatus(null);
+          }, 3000);
       } else {
-          alert('Failed to parse matches. Please check the format.');
+          setImportStatus({ 
+              message: 'Failed to parse matches. Please check the format.', 
+              type: 'error' 
+          });
       }
   };
 
@@ -426,74 +434,41 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                     Total Games Recorded: <span className="font-bold text-gray-900">{flattenedGames.length}</span>
                 </div>
                 {selectedMatchIds.size > 0 && onDeleteMatch && (
-                    <button 
-                        onClick={handleBulkDelete}
-                        className="flex items-center gap-2 text-sm font-bold text-red-600 hover:text-red-700 transition-colors bg-red-50 px-3 py-1 rounded-md"
-                    >
-                        <Trash2 className="w-4 h-4" /> Delete Selected ({selectedMatchIds.size})
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {isDeleting ? (
+                            <div className="flex items-center gap-2 bg-red-50 p-1 rounded-md border border-red-200 animate-in fade-in zoom-in-95">
+                                <span className="text-xs font-bold text-red-700 px-2">Confirm Delete?</span>
+                                <button 
+                                    onClick={confirmBulkDelete}
+                                    className="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-red-700 transition-colors"
+                                >
+                                    Yes, Delete
+                                </button>
+                                <button 
+                                    onClick={() => setIsDeleting(false)}
+                                    className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-bold hover:bg-gray-300 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : (
+                            <button 
+                                onClick={handleBulkDelete}
+                                className="flex items-center gap-2 text-sm font-bold text-red-600 hover:text-red-700 transition-colors bg-red-50 px-3 py-1 rounded-md"
+                            >
+                                <Trash2 className="w-4 h-4" /> Delete Selected ({selectedMatchIds.size})
+                            </button>
+                        )}
+                    </div>
                 )}
                 {onImportMatches && (
                     <button 
                         onClick={() => setShowImport(!showImport)}
-                        className="flex items-center gap-2 text-sm font-bold text-bowls-darkGreen hover:text-bowls-green transition-colors"
+                        className="flex items-center gap-2 text-sm font-bold text-green-600 hover:text-green-700 transition-colors"
                     >
                         <Upload className="w-4 h-4" /> Import Data
                     </button>
                 )}
-                <button 
-                    onClick={driveConnected ? onSyncToDrive : onConnectDrive}
-                    disabled={isSyncing}
-                    className={`flex items-center gap-2 text-sm font-bold transition-all px-3 py-1 rounded-md ${
-                        driveConnected 
-                        ? 'bg-blue-50 text-blue-600 hover:bg-blue-100' 
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    } ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                    <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                    {isSyncing ? 'Syncing...' : driveConnected ? 'Sync to Google Drive' : 'Connect Google Drive'}
-                </button>
-                <button 
-                    onClick={() => {
-                        const headers = ["Date", "Competition", "Opponent", "Venue", "Location", "Type", "Team Lineup", "Points For", "Points Against", "Diff", "Result"];
-                        const rows = flattenedGames.map(game => {
-                            const pf = parseInt(game.discipline.pointsFor) || 0;
-                            const pa = parseInt(game.discipline.pointsAgainst) || 0;
-                            const diff = pf - pa;
-                            const result = diff > 0 ? 'W' : diff < 0 ? 'L' : 'D';
-                            const lineup = game.discipline.assignments.map((a: any) => `${a.positionName.charAt(0)}: ${getPlayerName(a.playerId)}`).join(' | ');
-                            
-                            return [
-                                game.date,
-                                `"${game.competition.replace(/"/g, '""')}"`,
-                                `"${game.opponent.replace(/"/g, '""')}"`,
-                                `"${game.venue.replace(/"/g, '""')}"`,
-                                game.isHome ? 'Home' : 'Away',
-                                game.discipline.type,
-                                `"${lineup.replace(/"/g, '""')}"`,
-                                game.discipline.pointsFor,
-                                game.discipline.pointsAgainst,
-                                diff,
-                                result
-                            ].join(',');
-                        });
-                        
-                        const csvContent = [headers.join(','), ...rows].join('\n');
-                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.setAttribute('href', url);
-                        link.setAttribute('download', `bowls_database_${new Date().toISOString().split('T')[0]}.csv`);
-                        link.style.visibility = 'hidden';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }}
-                    className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-gray-800 transition-colors bg-gray-50 px-3 py-1 rounded-md border border-gray-200"
-                    title="Download CSV file for Google Sheets"
-                >
-                    <Download className="w-4 h-4" /> Download for Drive
-                </button>
             </div>
         </div>
 
@@ -509,25 +484,32 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                     Paste tab-separated data here (e.g. from Excel). Format: Date | Players... | Score For | Score Against | ... | Venue | Home/Away | Competition
                 </p>
                 <textarea 
-                    className="w-full h-40 p-3 border border-gray-300 rounded-lg text-xs font-mono focus:ring-2 focus:ring-bowls-darkGreen focus:border-transparent"
+                    className="w-full h-40 p-3 border border-gray-300 rounded-lg text-xs font-mono focus:ring-2 focus:ring-green-600 focus:border-transparent"
                     placeholder="Paste data here..."
                     value={importText}
                     onChange={(e) => setImportText(e.target.value)}
                 />
-                <div className="flex justify-end gap-2">
-                    <button 
-                        onClick={() => setImportText('')}
-                        className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700"
-                    >
-                        Clear
-                    </button>
-                    <button 
-                        onClick={handleImport}
-                        className="px-4 py-2 bg-bowls-darkGreen text-white text-sm font-bold rounded-lg hover:bg-bowls-green transition-colors disabled:opacity-50"
-                        disabled={!importText.trim()}
-                    >
-                        Process Import
-                    </button>
+                <div className="flex justify-between items-center">
+                    {importStatus && (
+                        <div className={`text-xs font-bold px-3 py-1.5 rounded-full ${importStatus.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} animate-in fade-in zoom-in-95`}>
+                            {importStatus.message}
+                        </div>
+                    )}
+                    <div className="flex gap-2 ml-auto">
+                        <button 
+                            onClick={() => setImportText('')}
+                            className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700"
+                        >
+                            Clear
+                        </button>
+                        <button 
+                            onClick={handleImport}
+                            className="px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 shadow-md"
+                            disabled={!importText.trim()}
+                        >
+                            Process Import
+                        </button>
+                    </div>
                 </div>
             </div>
         )}
@@ -540,7 +522,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                 <th scope="col" className="px-4 py-3 text-center w-10">
                     <input 
                         type="checkbox" 
-                        className="rounded border-gray-300 text-bowls-darkGreen focus:ring-bowls-darkGreen"
+                        className="rounded border-gray-300 text-green-600 focus:ring-green-600"
                         checked={selectedMatchIds.size > 0 && selectedMatchIds.size === matches.length}
                         onChange={toggleSelectAll}
                     />
@@ -572,7 +554,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                         <td className="px-4 py-3 text-center">
                             <input 
                                 type="checkbox" 
-                                className="rounded border-gray-300 text-bowls-darkGreen focus:ring-bowls-darkGreen"
+                                className="rounded border-gray-300 text-green-600 focus:ring-green-600"
                                 checked={selectedMatchIds.has(game.matchId)}
                                 onChange={() => toggleSelection(game.matchId)}
                             />
@@ -581,7 +563,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                             {isEditing ? (
                                 <input 
                                     type="date" 
-                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-green-600 outline-none"
                                     value={editValues.date}
                                     onChange={(e) => setEditValues({...editValues, date: e.target.value})}
                                 />
@@ -593,7 +575,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                             {isEditing ? (
                                 <input 
                                     type="text" 
-                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-green-600 outline-none"
                                     value={editValues.competition}
                                     onChange={(e) => setEditValues({...editValues, competition: e.target.value})}
                                 />
@@ -605,7 +587,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                             {isEditing ? (
                                 <input 
                                     type="text" 
-                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-green-600 outline-none"
                                     value={editValues.opponent}
                                     onChange={(e) => setEditValues({...editValues, opponent: e.target.value})}
                                 />
@@ -617,7 +599,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                             {isEditing ? (
                                 <input 
                                     type="text" 
-                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-green-600 outline-none"
                                     value={editValues.venue}
                                     onChange={(e) => setEditValues({...editValues, venue: e.target.value})}
                                 />
@@ -628,7 +610,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                         <td className="px-4 py-3 whitespace-nowrap text-gray-500">
                             {isEditing ? (
                                 <select
-                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-green-600 outline-none"
                                     value={editValues.isHome ? 'Home' : 'Away'}
                                     onChange={(e) => setEditValues({...editValues, isHome: e.target.value === 'Home'})}
                                 >
@@ -644,7 +626,7 @@ const DatabaseView: React.FC<DatabaseViewProps> = ({
                         <td className="px-4 py-3 whitespace-nowrap">
                             {isEditing ? (
                                 <select
-                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-green-600 outline-none"
                                     value={editValues.type}
                                     onChange={(e) => handleTypeChange(e.target.value as DisciplineType)}
                                 >

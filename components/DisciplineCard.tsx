@@ -16,6 +16,7 @@ interface DisciplineCardProps {
   matchDate?: string;
   matchTime?: string;
   isReadOnly?: boolean;
+  isEditing?: boolean;
 }
 
 const DisciplineCard: React.FC<DisciplineCardProps> = ({ 
@@ -30,7 +31,8 @@ const DisciplineCard: React.FC<DisciplineCardProps> = ({
   hideAvailability = false,
   matchDate,
   matchTime,
-  isReadOnly = false
+  isReadOnly = false,
+  isEditing = false
 }) => {
   
   const checkPlayerAvailability = (playerId: string | null): string | null => {
@@ -133,6 +135,7 @@ const DisciplineCard: React.FC<DisciplineCardProps> = ({
 
   // Logic for the whole card background in Admin view
   const getCardBackgroundStyles = () => {
+    if (isEditing) return 'bg-transparent border-orange-200/50';
     if (viewMode === 'Member') return 'bg-white border-gray-200';
 
     const assignments = data.assignments;
@@ -166,7 +169,7 @@ const DisciplineCard: React.FC<DisciplineCardProps> = ({
                     type="text"
                     value={data.pointsFor}
                     onChange={(e) => handleScoreChange('pointsFor', e.target.value)}
-                    className="w-16 text-center font-bold text-sm bg-white border border-gray-300 rounded focus:ring-1 focus:ring-bowls-darkGreen outline-none"
+                    className="w-16 text-center font-bold text-sm bg-white border border-gray-300 rounded focus:ring-1 focus:ring-green-600 outline-none"
                     placeholder="For"
                 />
                 <span className="text-xs font-bold">:</span>
@@ -201,7 +204,7 @@ const DisciplineCard: React.FC<DisciplineCardProps> = ({
           const unavailabilityWarning = assignment.playerId ? checkPlayerAvailability(assignment.playerId) : null;
 
           return (
-            <div key={idx} className={`flex items-start gap-3 p-2 rounded-lg border ${isPlayerInactive ? 'bg-red-50 border-red-200 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,#fee2e2_5px,#fee2e2_10px)]' : 'bg-white border-gray-100'} ${compact ? 'py-1 px-2 border-0 bg-transparent' : ''}`}>
+            <div key={idx} className={`flex items-start gap-3 p-2 rounded-lg border transition-colors duration-300 ${isPlayerInactive ? 'bg-red-50 border-red-200 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,#fee2e2_5px,#fee2e2_10px)]' : isEditing ? 'bg-orange-50/50 border-orange-100' : 'bg-white border-gray-100'} ${compact ? 'py-1 px-2 border-0 bg-transparent' : ''}`}>
                {!compact && (
                <div className="mt-1">
                  <Avatar src={selectedPlayer?.avatarUrl} alt={selectedPlayer?.name || 'Unassigned'} size="sm" />
@@ -230,7 +233,7 @@ const DisciplineCard: React.FC<DisciplineCardProps> = ({
                                     type="text"
                                     value={data.pointsFor}
                                     onChange={(e) => handleScoreChange('pointsFor', e.target.value)}
-                                    className="w-full text-center font-bold text-xs bg-white border border-gray-300 rounded focus:ring-1 focus:ring-bowls-darkGreen outline-none mb-1"
+                                    className="w-full text-center font-bold text-xs bg-white border border-gray-300 rounded focus:ring-1 focus:ring-green-600 outline-none mb-1"
                                     placeholder="Score"
                                  />
                              )}
@@ -262,12 +265,7 @@ const DisciplineCard: React.FC<DisciplineCardProps> = ({
                     </div>
                   </div>
 
-                  {unavailabilityWarning && (
-                      <div className="text-xs text-red-600 font-bold bg-red-50 border border-red-100 p-1.5 rounded mb-1 flex items-start gap-1">
-                          <AlertCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                          <span>{unavailabilityWarning}</span>
-                      </div>
-                  )}
+                  {/* Removed availability warning from here as requested - now handled by Bowls Manager in Chat */}
 
                   {/* Availability Dropdown (Members Only) - Moved below name */}
                   {viewMode === 'Member' && !hideAvailability && (

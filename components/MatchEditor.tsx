@@ -328,17 +328,17 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
       <div className={`grid grid-cols-1 ${showDraftTools ? 'lg:grid-cols-5' : 'lg:grid-cols-2'} gap-6`}>
           {/* Match Details */}
           <div className={`${showDraftTools ? 'lg:col-span-2' : 'lg:col-span-1'} ${isRedMatch ? 'bg-red-50 border-red-300' : 'bg-white border-gray-200'} rounded-2xl shadow-sm border p-6 relative overflow-hidden`}>
-             <div className="absolute top-0 left-0 w-2 h-full bg-bowls-darkGreen"></div>
+             <div className="absolute top-0 left-0 w-2 h-full bg-green-600"></div>
              
              <div className="flex justify-between items-start mb-6">
                 <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <Shield className="w-6 h-6 text-bowls-darkGreen" />
+                    <Shield className="w-6 h-6 text-green-600" />
                     Match Details
                 </h2>
                 {viewMode === 'Admin' && (
                     <button 
                         onClick={handleSaveToDatabase}
-                        className="flex items-center gap-2 text-sm font-bold bg-bowls-darkGreen text-white hover:bg-bowls-green hover:text-bowls-darkGreen px-4 py-2 rounded-lg transition-colors shadow-md"
+                        className="flex items-center gap-2 text-sm font-bold bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg transition-colors shadow-md"
                     >
                         Enter Results to Database <ArrowRight className="w-4 h-4" />
                     </button>
@@ -356,7 +356,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                             type="text" 
                             value={match.competition}
                             onChange={(e) => handleMetaChange('competition', e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-bowls-darkGreen focus:border-bowls-darkGreen block p-2"
+                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block p-2"
                         />
                     ) : (
                         <div className="font-semibold text-lg">{match.competition}</div>
@@ -373,7 +373,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                             type="text" 
                             value={match.opponent}
                             onChange={(e) => handleMetaChange('opponent', e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-bowls-darkGreen focus:border-bowls-darkGreen block p-2"
+                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block p-2"
                         />
                     ) : (
                         <div className="font-semibold text-lg">{match.opponent}</div>
@@ -426,7 +426,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                             type="text" 
                             value={match.venue}
                             onChange={(e) => handleMetaChange('venue', e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-bowls-darkGreen focus:border-bowls-darkGreen block p-2"
+                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block p-2"
                             placeholder="e.g. West Melton Bowling Club"
                         />
                     ) : (
@@ -443,13 +443,13 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                         <div className="flex bg-gray-100 rounded-lg p-1 w-max">
                             <button 
                                 onClick={() => handleMetaChange('isHome', true)}
-                                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${match.isHome ? 'bg-white shadow-[0_0_10px_rgba(21,128,61,0.25)] text-bowls-darkGreen ring-1 ring-bowls-green/50' : 'text-gray-400 hover:text-gray-600'}`}
+                                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${match.isHome ? 'bg-white shadow-[0_0_10px_rgba(21,128,61,0.25)] text-green-600 ring-1 ring-green-500/50' : 'text-gray-400 hover:text-gray-600'}`}
                             >
                                 Home
                             </button>
                             <button 
                                 onClick={() => handleMetaChange('isHome', false)}
-                                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${!match.isHome ? 'bg-white shadow-[0_0_10px_rgba(21,128,61,0.25)] text-bowls-darkGreen ring-1 ring-bowls-green/50' : 'text-gray-400 hover:text-gray-600'}`}
+                                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${!match.isHome ? 'bg-white shadow-[0_0_10px_rgba(21,128,61,0.25)] text-green-600 ring-1 ring-green-500/50' : 'text-gray-400 hover:text-gray-600'}`}
                             >
                                 Away
                             </button>
@@ -457,11 +457,11 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                     ) : (
                         <div className="flex bg-gray-100 rounded-lg p-1 w-max">
                             {match.isHome ? (
-                                <div className="px-4 py-1.5 rounded-md text-xs font-bold bg-white shadow-[0_0_10px_rgba(21,128,61,0.25)] text-bowls-darkGreen ring-1 ring-bowls-green/50">
+                                <div className="px-4 py-1.5 rounded-md text-xs font-bold bg-white shadow-[0_0_10_rgba(21,128,61,0.25)] text-green-600 ring-1 ring-green-500/50">
                                     Home
                                 </div>
                             ) : (
-                                <div className="px-4 py-1.5 rounded-md text-xs font-bold bg-white shadow-[0_0_10px_rgba(21,128,61,0.25)] text-bowls-darkGreen ring-1 ring-bowls-green/50">
+                                <div className="px-4 py-1.5 rounded-md text-xs font-bold bg-white shadow-[0_0_10_rgba(21,128,61,0.25)] text-green-600 ring-1 ring-green-500/50">
                                     Away
                                 </div>
                             )}
@@ -502,12 +502,89 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
              </div>
           </div>
 
-          {showDraftTools && (
-              <>
+          {showDraftTools ? (
+              /* Final Teams (Draft Team Sheet) moved up next to Match Details */
+              <div className="lg:col-span-3 space-y-4 bg-green-500/10 p-4 rounded-xl border border-green-500/30">
+                  <div className="flex items-center justify-between">
+                      <h3 className="font-bold text-gray-700 uppercase tracking-wider text-sm ml-1">Team Sheet (Final)</h3>
+                      <button 
+                          onClick={() => {
+                              if (isRedMatch) {
+                                  alert('Please replace the unavailable player(s) before re-confirming the team.');
+                                  return;
+                              }
+                              const newValue = !match.isConfirmed;
+                              handleMetaChange('isConfirmed', newValue);
+                              if (newValue) {
+                                  alert('Teams have been confirmed and are now visible to members!');
+                              } else {
+                                  alert('Teams are no longer confirmed and are hidden from members.');
+                              }
+                          }}
+                          className={`py-1.5 px-4 rounded-lg text-xs font-bold shadow-sm transition-colors ${match.isConfirmed ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                      >
+                          {isRedMatch ? 'Re-Confirm Team' : (match.isConfirmed ? 'Teams Confirmed ✓' : 'Confirm Teams')}
+                      </button>
+                  </div>
+                  {match.disciplines.length === 0 ? (
+                      <div className="bg-white/50 border-2 border-dashed border-gray-300 rounded-xl p-10 text-center text-gray-500">
+                          <p>No teams selected yet.</p>
+                          {isLatestMatch && <p className="text-sm mt-2">Use the "Required Sides" dropdowns below to add teams.</p>}
+                      </div>
+                  ) : (
+                      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                          {match.disciplines.map((discipline) => (
+                              <DisciplineCard 
+                                  key={discipline.id}
+                                  data={discipline}
+                                  players={players}
+                                  viewMode={viewMode}
+                                  onUpdate={(updated) => updateDiscipline(discipline.id, updated)}
+                                  onRemove={() => removeDiscipline(discipline.id)}
+                                  matchDate={match.date}
+                                  matchTime={match.time}
+                              />
+                          ))}
+                      </div>
+                  )}
+              </div>
+          ) : (
+              /* Team Sheet (Confirmed) */
+              <div className="lg:col-span-1 space-y-4">
+                  <h3 className="font-bold text-gray-700 uppercase tracking-wider text-sm ml-1">Team Sheet</h3>
+                  {match.disciplines.length === 0 ? (
+                      <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-10 text-center text-gray-500">
+                          <p>No teams selected yet.</p>
+                      </div>
+                  ) : (
+                      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                          {match.disciplines.map((discipline) => (
+                              <DisciplineCard 
+                                  key={discipline.id}
+                                  data={discipline}
+                                  players={players}
+                                  viewMode={viewMode}
+                                  onUpdate={(updated) => updateDiscipline(discipline.id, updated)}
+                                  onRemove={() => removeDiscipline(discipline.id)}
+                                  matchDate={match.date}
+                                  matchTime={match.time}
+                              />
+                          ))}
+                      </div>
+                  )}
+              </div>
+          )}
+      </div>
+
+
+      {showDraftTools && (
+          <div className="space-y-6">
+              {/* Draft Tools Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                   {/* Available Players Summary */}
-                  <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200 p-4 flex flex-col h-full max-h-[400px]">
+                  <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-200 p-4 flex flex-col h-full max-h-[400px]">
                       <h3 className="font-bold text-gray-800 uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
-                          <Users className="w-4 h-4 text-bowls-darkGreen" /> Available Players
+                          <Users className="w-4 h-4 text-green-600" /> Available Players
                       </h3>
                       <div className="flex-1 overflow-y-auto pr-2 space-y-4">
                           {[
@@ -534,9 +611,9 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                       </div>
                   </div>
 
-                  {/* Quick Stats / Side Selector */}
+                  {/* Quick Stats & AI */}
                   <div className="lg:col-span-1 flex flex-col gap-4">
-                      <div className="bg-bowls-darkGreen rounded-2xl shadow-sm p-4 text-white">
+                      <div className="bg-green-600 rounded-2xl shadow-sm p-4 text-white">
                           <h3 className="font-bold opacity-80 uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
                               <Users className="w-4 h-4" /> Required Sides
                           </h3>
@@ -580,111 +657,68 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                           )}
                       </div>
 
-                      {/* Chat Prompt - Admin Only */}
                       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 flex flex-col gap-2 flex-1">
-                              <div className="flex items-center justify-between mb-1">
-                                  <div className="flex items-center gap-2 text-bowls-darkGreen text-xs font-bold uppercase tracking-wider">
-                                      <Sparkles className="w-3 h-3" /> AI Assistant
-                                  </div>
-                                  {(chatInput || chatResponse) && (
-                                      <button 
-                                          onClick={() => {
-                                              setChatInput('');
-                                              setChatResponse(null);
-                                          }}
-                                          className="text-xs text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1"
-                                          title="Clear Chat"
-                                      >
-                                          <Trash2 className="w-3 h-3" /> Clear
-                                      </button>
-                                  )}
+                          <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2 text-green-600 text-xs font-bold uppercase tracking-wider">
+                                  <Sparkles className="w-3 h-3" /> AI Assistant
                               </div>
-                              <div className="relative flex-1">
-                                  <textarea 
-                                      placeholder="Ask a question about past match results..." 
-                                      className="w-full h-full min-h-[80px] text-sm border-gray-200 rounded-lg bg-gray-50 focus:ring-bowls-darkGreen focus:border-bowls-darkGreen resize-none p-3 pr-10"
-                                      spellCheck="false"
-                                      data-gramm="false"
-                                      data-enable-grammarly="false"
-                                      value={chatInput}
-                                      onChange={(e) => setChatInput(e.target.value)}
-                                      onKeyDown={(e) => {
-                                          if (e.key === 'Enter' && !e.shiftKey) {
-                                              e.preventDefault();
-                                              handleChatSubmit();
-                                          }
-                                      }}
-                                  />
+                              {(chatInput || chatResponse) && (
                                   <button 
-                                      onClick={handleChatSubmit}
-                                      disabled={isThinking || !chatInput.trim()}
-                                      className="absolute bottom-2 right-2 p-1.5 bg-bowls-darkGreen text-white rounded-md hover:bg-bowls-green transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                      onClick={() => {
+                                          setChatInput('');
+                                          setChatResponse(null);
+                                      }}
+                                      className="text-xs text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1"
+                                      title="Clear Chat"
                                   >
-                                      {isThinking ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                                      <Trash2 className="w-3 h-3" /> Clear
                                   </button>
-                              </div>
-                              {chatResponse && (
-                                  <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-700 border border-gray-100 max-h-40 overflow-y-auto">
-                                      <p className="whitespace-pre-wrap">{chatResponse}</p>
-                                  </div>
                               )}
                           </div>
-                      </div>
-                  </>
-              )}
-          </div>
-
-      {!showDraftTools && (
-          <div className="space-y-4">
-              <h3 className="font-bold text-gray-700 uppercase tracking-wider text-sm ml-1">Team Sheet</h3>
-              {match.disciplines.length === 0 ? (
-                  <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-10 text-center text-gray-500">
-                      <p>No teams selected yet.</p>
-                  </div>
-              ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {match.disciplines.map((discipline) => (
-                          <DisciplineCard 
-                              key={discipline.id}
-                              data={discipline}
-                              players={players}
-                              viewMode={viewMode}
-                              onUpdate={(updated) => updateDiscipline(discipline.id, updated)}
-                              onRemove={() => removeDiscipline(discipline.id)}
-                              matchDate={match.date}
-                              matchTime={match.time}
-                          />
-                      ))}
-                  </div>
-              )}
-          </div>
-      )}
-
-      {showDraftTools && (
-          <div className="space-y-4">
-              {/* Team Allocations Grid */}
-              {match.disciplines.length === 0 ? (
-                  <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-10 text-center text-gray-500">
-                      <p>No teams selected yet.</p>
-                      {isLatestMatch && <p className="text-sm mt-2">Use the "Required Sides" dropdowns above to add teams.</p>}
-                  </div>
-              ) : (
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      {/* Selector 1 */}
-                      <div className="space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                          <div className="form-group flex items-center gap-2">
-                              <label className="text-xs font-bold text-gray-500 uppercase whitespace-nowrap">
-                                  Selector 1
-                              </label>
-                              <select 
-                                  value={match.selector1Id || ''}
-                                  onChange={(e) => handleMetaChange('selector1Id', e.target.value)}
-                                  className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-bowls-darkGreen focus:border-bowls-darkGreen block p-2"
+                          <div className="relative flex-1">
+                              <textarea 
+                                  placeholder="Ask about past results..." 
+                                  className="w-full h-full min-h-[80px] text-sm border-gray-200 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 resize-none p-3 pr-10"
+                                  value={chatInput}
+                                  onChange={(e) => setChatInput(e.target.value)}
+                                  onKeyDown={(e) => {
+                                      if (e.key === 'Enter' && !e.shiftKey) {
+                                          e.preventDefault();
+                                          handleChatSubmit();
+                                      }
+                                  }}
+                              />
+                              <button 
+                                  onClick={handleChatSubmit}
+                                  disabled={isThinking || !chatInput.trim()}
+                                  className="absolute bottom-2 right-2 p-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                  <option value="">Select Admin...</option>
-                                  {players.filter(p => p.role === 'Admin' || p.role === 'Admin Editor').map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-                              </select>
+                                  {isThinking ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                              </button>
                           </div>
+                          {chatResponse && (
+                              <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-700 border border-gray-100 max-h-40 overflow-y-auto">
+                                  <p className="whitespace-pre-wrap">{chatResponse}</p>
+                              </div>
+                          )}
+                      </div>
+                  </div>
+
+                  {/* Selector 1 */}
+                  <div className="lg:col-span-1 space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                      <div className="form-group flex items-center gap-2">
+                          <label className="text-xs font-bold text-gray-500 uppercase whitespace-nowrap">
+                              Selector 1
+                          </label>
+                          <select 
+                              value={match.selector1Id || ''}
+                              onChange={(e) => handleMetaChange('selector1Id', e.target.value)}
+                              className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block p-2"
+                          >
+                              <option value="">Select Admin...</option>
+                              {players.filter(p => p.role === 'Admin' || p.role === 'Admin Editor').map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                          </select>
+                      </div>
                       <div className="space-y-4">
                           {(match.selector1Picks || []).map((discipline) => (
                               <DisciplineCard 
@@ -705,7 +739,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                   </div>
 
                   {/* Selector 2 */}
-                  <div className="space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <div className="lg:col-span-1 space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
                       <div className="form-group flex items-center gap-2">
                           <label className="text-xs font-bold text-gray-500 uppercase whitespace-nowrap">
                               Selector 2
@@ -713,7 +747,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                           <select 
                               value={match.selector2Id || ''}
                               onChange={(e) => handleMetaChange('selector2Id', e.target.value)}
-                              className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-bowls-darkGreen focus:border-bowls-darkGreen block p-2"
+                              className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block p-2"
                           >
                               <option value="">Select Admin...</option>
                               {players.filter(p => p.role === 'Admin' || p.role === 'Admin Editor').map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -737,47 +771,8 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                           ))}
                       </div>
                   </div>
-
-                  {/* Final Teams */}
-                  <div className="space-y-4 bg-bowls-green/10 p-4 rounded-xl border border-bowls-green/30">
-                      <div className="h-[62px] flex items-end">
-                          <button 
-                              onClick={() => {
-                                  if (isRedMatch) {
-                                      alert('Please replace the unavailable player(s) before re-confirming the team.');
-                                      return;
-                                  }
-                                  const newValue = !match.isConfirmed;
-                                  handleMetaChange('isConfirmed', newValue);
-                                  if (newValue) {
-                                      alert('Teams have been confirmed and are now visible to members!');
-                                  } else {
-                                      alert('Teams are no longer confirmed and are hidden from members.');
-                                  }
-                              }}
-                              className={`w-full py-2 px-4 rounded-lg font-bold shadow-sm transition-colors ${match.isConfirmed ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-bowls-darkGreen text-white hover:bg-bowls-green'}`}
-                          >
-                              {isRedMatch ? 'Re-Confirm Team' : (match.isConfirmed ? 'Teams Confirmed ✓' : 'Confirm Teams')}
-                          </button>
-                      </div>
-                      <div className="space-y-4">
-                          {match.disciplines.map((discipline) => (
-                              <DisciplineCard 
-                                  key={discipline.id}
-                                  data={discipline}
-                                  players={players}
-                                  viewMode={viewMode}
-                                  onUpdate={(updated) => updateDiscipline(discipline.id, updated)}
-                                  onRemove={() => removeDiscipline(discipline.id)}
-                                  matchDate={match.date}
-                                  matchTime={match.time}
-                              />
-                          ))}
-                      </div>
-                  </div>
               </div>
-          )}
-      </div>
+          </div>
       )}
 
       {/* Email Preview Modal */}
@@ -786,7 +781,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
               <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
                   <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50">
                       <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                          <Mail className="w-5 h-5 text-bowls-darkGreen" />
+                          <Mail className="w-5 h-5 text-green-600" />
                           Email Preview
                       </h3>
                       <button 
@@ -829,7 +824,7 @@ const MatchEditor: React.FC<MatchEditorProps> = ({ match, players, databaseMatch
                       </button>
                       <button 
                           onClick={confirmSendEmail}
-                          className="flex items-center gap-2 px-6 py-2 bg-bowls-darkGreen text-white text-sm font-bold rounded-lg hover:bg-bowls-green transition-colors shadow-md"
+                          className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors shadow-md"
                       >
                           <Send className="w-4 h-4" />
                           Open Gmail
