@@ -16,7 +16,7 @@
       "role": "Admin",
       "isApproved": true,
       "email": "gary@example.com",
-      "password": "$2b$10$MBWqWV5muDYqA18FPF6CruaM18MUsL5ZmdYiIwaAHxt9oijdJAI3y"
+      "password": "password"
     },
     {
       "id": "3",
@@ -125,7 +125,44 @@
     }
   ],
   "databaseMatches": [],
-  "scorecards": [],
+  "scorecards": [
+    {
+      "id": "sc-1774755594254-0.7347252915841227",
+      "competition": "Club Champs",
+      "selectedType": "Singles",
+      "playByDate": "",
+      "agreedPlayDate": "",
+      "startTime": "",
+      "isHome": true,
+      "teamA": {
+        "id": "cc-1774755594254-A-0.35424963302011303",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": null,
+            "availability": "Yes"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "teamB": {
+        "id": "cc-1774755594254-B-0.8375691433578456",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": null,
+            "availability": "Yes"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "isNew": true
+    }
+  ],
   "appSettings": {
     "backgroundImage": null,
     "backgroundScale": 1,
