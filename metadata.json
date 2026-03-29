@@ -22,7 +22,7 @@
           "type": "All Day"
         }
       ],
-      "password": "$2b$10$jiFfiNMRGWWoZlCvrmiJWe9QhXEA4IWxeruAy/UQOuHTlKT0i3y1W"
+      "password": "password"
     },
     {
       "id": "3",
@@ -710,7 +710,7 @@
       "competition": "Club Champs",
       "selectedType": "Singles",
       "playByDate": "2026-03-29",
-      "agreedPlayDate": "2026-03-29",
+      "agreedPlayDate": "2026-03-30",
       "startTime": "",
       "isHome": true,
       "teamA": {
@@ -740,7 +740,7 @@
         "pointsAgainst": ""
       },
       "isNew": false,
-      "isEditing": false
+      "isEditing": true
     }
   ],
   "appSettings": {
