@@ -11440,44 +11440,7 @@
       ]
     }
   ],
-  "scorecards": [
-    {
-      "id": "sc-1774758009845-0.8348552575828599",
-      "competition": "Club Champs",
-      "selectedType": "Singles",
-      "playByDate": "",
-      "agreedPlayDate": "",
-      "startTime": "",
-      "isHome": true,
-      "teamA": {
-        "id": "cc-1774758009845-A-0.6067529074321103",
-        "type": "Singles",
-        "assignments": [
-          {
-            "positionName": "Skip",
-            "playerId": null,
-            "availability": "Yes"
-          }
-        ],
-        "pointsFor": "",
-        "pointsAgainst": ""
-      },
-      "teamB": {
-        "id": "cc-1774758009845-B-0.5306688240841124",
-        "type": "Singles",
-        "assignments": [
-          {
-            "positionName": "Skip",
-            "playerId": null,
-            "availability": "Yes"
-          }
-        ],
-        "pointsFor": "",
-        "pointsAgainst": ""
-      },
-      "isNew": true
-    }
-  ],
+  "scorecards": [],
   "appSettings": {
     "backgroundImage": null,
     "backgroundScale": 1,
