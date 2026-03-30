@@ -11475,7 +11475,8 @@
         "pointsFor": "",
         "pointsAgainst": ""
       },
-      "isNew": true
+      "isNew": false,
+      "isEditing": false
     }
   ],
   "appSettings": {
