@@ -23,16 +23,53 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onRequestAccess }) => {
     setIsLoading(true);
 
     try {
-      const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/signup';
+      const endpoint = isLoginMode ? '/api/auth-login' : '/api/auth/signup';
+      const netlifyEndpoint = isLoginMode ? '/.netlify/functions/auth-login' : '/.netlify/functions/auth/signup';
       const body = isLoginMode ? { email, password } : { name, email, password };
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+      let response;
+      const tryAuth = async (url: string) => {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        
+        // If we got HTML back (likely from a SPA redirect) or a 404, it's not the real API
+        const contentType = res.headers.get('content-type');
+        if (res.status === 404 || (contentType && contentType.includes('text/html'))) {
+          throw new Error('Endpoint not found');
+        }
+        return res;
+      };
 
-      const data = await response.json();
+      try {
+        response = await tryAuth(endpoint);
+      } catch (e) {
+        // Fallback to Netlify function if local API fails or returns HTML
+        try {
+          response = await tryAuth(netlifyEndpoint);
+        } catch (netlifyErr) {
+          throw new Error('Authentication service unavailable. Please check your connection.');
+        }
+      }
+
+      let data;
+      const text = await response.text();
+      
+      if (!text) {
+        throw new Error(`The server returned an empty response (Status: ${response.status}). Please try again or contact support.`);
+      }
+
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('Failed to parse JSON response:', text);
+        if (!response.ok) {
+          throw new Error(`Server error (${response.status}): ${response.statusText}. The response was not valid JSON.`);
+        }
+        throw new Error('The server sent an invalid response format. Please try again.');
+      }
 
       if (!response.ok) {
         throw new Error(data.error || 'Authentication failed');
@@ -70,13 +107,49 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onRequestAccess }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: demoEmail, password: 'password' }),
-      });
+      let response;
+      const tryAuth = async (url: string, body: any) => {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        
+        const contentType = res.headers.get('content-type');
+        if (res.status === 404 || (contentType && contentType.includes('text/html'))) {
+          throw new Error('Endpoint not found');
+        }
+        return res;
+      };
 
-      const data = await response.json();
+      const loginBody = { email: demoEmail, password: 'password' };
+      try {
+        response = await tryAuth('/api/auth-login', loginBody);
+      } catch (e) {
+        // Fallback to Netlify function if local API fails
+        try {
+          response = await tryAuth('/.netlify/functions/auth-login', loginBody);
+        } catch (netlifyErr) {
+          throw new Error('Authentication service unavailable. Please check your connection.');
+        }
+      }
+
+      let data;
+      const text = await response.text();
+      
+      if (!text) {
+        throw new Error(`The server returned an empty response (Status: ${response.status}). Please try again.`);
+      }
+
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('Failed to parse JSON response:', text);
+        if (!response.ok) {
+          throw new Error(`Server error (${response.status}): ${response.statusText}. The response was not valid JSON.`);
+        }
+        throw new Error('The server sent an invalid response format. Please try again.');
+      }
 
       if (!response.ok) {
         throw new Error(data.error || 'Authentication failed');

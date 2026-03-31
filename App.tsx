@@ -3,6 +3,7 @@ import { Match, ViewMode, Player, Scorecard } from './types';
 import { MOCK_PLAYERS, INITIAL_MATCH } from './constants';
 import MatchEditor from './components/MatchEditor';
 import DatabaseView from './components/DatabaseView';
+import SpreadsheetView from './components/SpreadsheetView';
 import PlayerManager from './components/PlayerManager';
 import ClubChamps, { ClubChampsHandle } from './components/ClubChamps';
 import PlayerAvailability from './components/PlayerAvailability';
@@ -99,6 +100,7 @@ const App: React.FC = () => {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [daysUntilNextGame, setDaysUntilNextGame] = useState<number>(0);
   const [daysOverdue, setDaysOverdue] = useState<number>(0);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
 
   // Effect to update view mode based on user role
   useEffect(() => {
@@ -172,22 +174,34 @@ const App: React.FC = () => {
   }, [currentUser]);
 
   // Initialize Data
-  useEffect(() => {
-      const loadData = async () => {
-          try {
-              const response = await fetch('/api/github/data');
-              if (response.ok) {
-                  const data = await response.json();
+  const loadData = async () => {
+      setIsSyncing(true);
+      try {
+          // Try Netlify function first, fallback to local API
+          const response = await fetch('/.netlify/functions/sync').catch(() => fetch('/api/github/data'));
+          
+          if (response.ok) {
+              const contentType = response.headers.get("content-type");
+              if (contentType && contentType.includes("application/json")) {
+                  const result = await response.json();
+                  const data = result.data || result; // Handle both Netlify and local API formats
                   if (data.players) setPlayers(data.players);
                   if (data.matches) setMatches(data.matches);
                   if (data.databaseMatches) setDatabaseMatches(data.databaseMatches);
                   if (data.scorecards) setScorecards(data.scorecards);
                   if (data.appSettings) setAppSettings(data.appSettings);
+              } else {
+                  console.warn("Received non-JSON response from GitHub sync");
               }
-          } catch (error) {
-              console.error("Failed to load data from GitHub:", error);
           }
-      };
+      } catch (error) {
+          console.error("Failed to load data from GitHub:", error);
+      } finally {
+          setIsSyncing(false);
+      }
+  };
+
+  useEffect(() => {
       loadData();
       
       // Set initial active tab if not set (though useState handles it mostly)
@@ -197,27 +211,34 @@ const App: React.FC = () => {
   }, []);
 
   // Save on change
-  useEffect(() => {
-    const saveData = async () => {
-        try {
-            await fetch('/api/github/data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    data: {
-                        players,
-                        matches,
-                        databaseMatches,
-                        scorecards,
-                        appSettings
-                    }
-                })
-            });
-        } catch (error) {
-            console.error("Failed to save data to GitHub:", error);
-        }
-    };
+  const saveData = async (manualData?: any) => {
+      setIsSyncing(true);
+      try {
+          const content = manualData || {
+              players,
+              matches,
+              databaseMatches,
+              scorecards,
+              appSettings
+          };
 
+          await fetch('/.netlify/functions/sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ content })
+          }).catch(() => fetch('/api/github/data', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: content })
+          }));
+      } catch (error) {
+          console.error("Failed to save data to GitHub:", error);
+      } finally {
+          setIsSyncing(false);
+      }
+  };
+
+  useEffect(() => {
     // Only save if we have data (avoid overwriting with empty state on initial load)
     if (players.length > 0 || matches.length > 0) {
         saveData();
@@ -924,12 +945,27 @@ const App: React.FC = () => {
                             onClick={() => setActiveTab('Database')}
                             className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap border ${
                                 activeTab === 'Database' 
-                                ? 'bg-gray-100 text-gray-900 border-gray-300 ring-2 ring-gray-400 ring-offset-1' 
+                                ? 'bg-indigo-100 text-indigo-900 border-indigo-300 ring-2 ring-indigo-400 ring-offset-1' 
                                 : 'bg-white text-gray-500 border-transparent hover:bg-gray-50 hover:text-gray-700'
                             }`}
                         >
                             <Table className="w-4 h-4 mr-2" />
                             Database
+                        </button>
+                    )}
+
+                    {/* Admin Only: Ledger Tab (Old Database View) */}
+                    {(currentView === 'Admin' || currentView === 'Admin Editor') && (
+                        <button
+                            onClick={() => setActiveTab('Ledger')}
+                            className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap border ${
+                                activeTab === 'Ledger' 
+                                ? 'bg-gray-100 text-gray-900 border-gray-300 ring-2 ring-gray-400 ring-offset-1' 
+                                : 'bg-white text-gray-500 border-transparent hover:bg-gray-50 hover:text-gray-700'
+                            }`}
+                        >
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Ledger
                         </button>
                     )}
 
@@ -1053,7 +1089,7 @@ const App: React.FC = () => {
                     onRemovePlayer={handleRemovePlayer}
                     onUpdatePlayer={handleUpdatePlayer}
                 />
-            ) : activeTab === 'Database' ? (
+            ) : activeTab === 'Ledger' ? (
                 <DatabaseView 
                     matches={databaseMatches} 
                     players={players} 
@@ -1065,6 +1101,22 @@ const App: React.FC = () => {
                     }}
                     onImportMatches={handleImportMatches}
                     onAddPlayer={handleAddPlayer}
+                />
+            ) : activeTab === 'Database' ? (
+                <SpreadsheetView 
+                    data={databaseMatches}
+                    isLoading={isSyncing}
+                    onRefresh={loadData}
+                    onSave={(newData) => {
+                        setDatabaseMatches(newData);
+                        saveData({ 
+                            players,
+                            matches,
+                            databaseMatches: newData,
+                            scorecards,
+                            appSettings
+                        });
+                    }}
                 />
             ) : activeTab === 'Settings' && (currentView === 'Admin' || currentView === 'Admin Editor') ? (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

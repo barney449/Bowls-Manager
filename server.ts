@@ -186,10 +186,10 @@ async function startServer() {
     }
   };
 
-  app.get("/api/github/data", async (req, res) => {
+  app.get(["/api/github/data", "/.netlify/functions/sync"], async (req, res) => {
     try {
       const data = await getGitHubData();
-      res.json(data);
+      res.json(req.path.includes('sync') ? { data } : data);
     } catch (error: any) {
       console.error("Error fetching from GitHub:", error);
       res.status(error.status || 500).json({ 
@@ -199,9 +199,10 @@ async function startServer() {
     }
   });
 
-  app.post("/api/github/data", async (req, res) => {
+  app.post(["/api/github/data", "/.netlify/functions/sync"], async (req, res) => {
     try {
-      await saveGitHubData(req.body.data);
+      const dataToSave = req.path.includes('sync') ? req.body.content : req.body.data;
+      await saveGitHubData(dataToSave);
       res.json({ success: true });
     } catch (error: any) {
       console.error("Error saving to GitHub:", error);
@@ -251,14 +252,14 @@ async function startServer() {
       await saveGitHubData(data);
 
       (req.session as any).userId = newPlayer.id;
-      res.json({ user: { id: newPlayer.id, name: newPlayer.name, email: newPlayer.email, role: newPlayer.role } });
+      res.json({ success: true, user: { id: newPlayer.id, name: newPlayer.name, email: newPlayer.email, role: newPlayer.role } });
     } catch (error: any) {
       console.error("Signup error:", error);
       res.status(500).json({ error: "Signup failed" });
     }
   });
 
-    app.post("/api/auth/login", async (req, res) => {
+    app.post(["/api/auth/login", "/api/auth-login"], async (req, res) => {
       const { email, password } = req.body;
       if (!email || !password) {
         return res.status(400).json({ error: "Missing email or password" });
@@ -303,7 +304,7 @@ async function startServer() {
         }
 
         (req.session as any).userId = user.id;
-        res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+        res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
       } catch (error: any) {
         console.error("Login error:", error);
         res.status(500).json({ error: `Login failed: ${error.message}` });
@@ -349,7 +350,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get('*all', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
