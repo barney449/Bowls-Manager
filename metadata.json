@@ -388,7 +388,23 @@
       "isApproved": true
     }
   ],
-  "matches": [],
+  "matches": [
+    {
+      "id": "match-1774938962538",
+      "date": "2026-03-31",
+      "time": "08:30",
+      "venue": "Papanui Club",
+      "isHome": false,
+      "competition": "New Competition",
+      "opponent": "TBD",
+      "isConfirmed": false,
+      "disciplines": [],
+      "selector1Picks": [],
+      "selector2Picks": [],
+      "selector1Id": "",
+      "selector2Id": ""
+    }
+  ],
   "databaseMatches": [
     {
       "id": "imp-match-1774755691661-0-004alhkrv",
