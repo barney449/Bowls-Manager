@@ -43,7 +43,7 @@
       "role": "Admin Editor",
       "isApproved": true,
       "email": "sean@example.com",
-      "password": "password"
+      "password": "$2b$10$a6vYY/Okhi1bH0T9IsV89OjIyqXWDuRRZVzTSnBm0IZ5gBOqmXi72"
     },
     {
       "id": "6",
