@@ -11529,45 +11529,7 @@
       ]
     }
   ],
-  "scorecards": [
-    {
-      "id": "sc-1774937986078-0.9534772321624656",
-      "competition": "Club Champs",
-      "selectedType": "Singles",
-      "playByDate": "2026-04-12",
-      "agreedPlayDate": "",
-      "startTime": "",
-      "isHome": true,
-      "teamA": {
-        "id": "cc-1774937986078-A-0.7987159326637865",
-        "type": "Singles",
-        "assignments": [
-          {
-            "positionName": "Skip",
-            "playerId": "1",
-            "availability": "Unset"
-          }
-        ],
-        "pointsFor": "",
-        "pointsAgainst": ""
-      },
-      "teamB": {
-        "id": "cc-1774937986078-B-0.05090834775111486",
-        "type": "Singles",
-        "assignments": [
-          {
-            "positionName": "Skip",
-            "playerId": "2",
-            "availability": "Unset"
-          }
-        ],
-        "pointsFor": "",
-        "pointsAgainst": ""
-      },
-      "isNew": false,
-      "isEditing": false
-    }
-  ],
+  "scorecards": [],
   "appSettings": {
     "backgroundImage": null,
     "backgroundScale": 1,
