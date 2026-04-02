@@ -7,7 +7,7 @@
       "role": "Active Member",
       "isApproved": true,
       "email": "jacob@example.com",
-      "password": "password"
+      "password": "$2b$10$p6CaiSXDK2MLN82jjYFCmO5l6KLsc/tPfVAf5gidqD7wq6XPm2/fe"
     },
     {
       "id": "2",
@@ -16,7 +16,7 @@
       "role": "Admin",
       "isApproved": true,
       "email": "gary@example.com",
-      "password": "password"
+      "password": "$2b$10$ltqnKWOIF3JK4TWO6CHwWOnx6The.i1hpda1X65mYEaEwr2o/3Clm"
     },
     {
       "id": "3",
@@ -397,33 +397,30 @@
       "isHome": false,
       "competition": "under arm 4s",
       "opponent": "someone",
-      "isConfirmed": true,
+      "isConfirmed": false,
       "disciplines": [
         {
-          "id": "disc-1775053543913-0.6926794346695213",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": "1",
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1775053549880-0.11634231494080005",
-          "type": "Pairs",
+          "id": "disc-1774939003426-0.3599958543379278",
+          "type": "Fours",
           "assignments": [
             {
               "positionName": "Lead",
-              "playerId": "7",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
+              "playerId": null,
               "availability": "Unset"
             },
             {
               "positionName": "Skip",
-              "playerId": "imp-pl-1774755691661-0.7056087070700221-0",
+              "playerId": null,
               "availability": "Unset"
             }
           ],
@@ -433,24 +430,21 @@
       ],
       "selector1Picks": [
         {
-          "id": "disc-1775053543913-0.5872675242251989",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1775053549880-0.9403913818537306",
-          "type": "Pairs",
+          "id": "disc-1774939003426-0.7777148941443489",
+          "type": "Fours",
           "assignments": [
             {
               "positionName": "Lead",
+              "playerId": "imp-pl-1774755691661-0.4888036314523503-0",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": "imp-pl-1774755691661-0.5078225228401659-0",
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
               "playerId": null,
               "availability": "Unset"
             },
@@ -466,24 +460,21 @@
       ],
       "selector2Picks": [
         {
-          "id": "disc-1775053543913-0.5980169086762523",
-          "type": "Singles",
-          "assignments": [
-            {
-              "positionName": "Marker/Player",
-              "playerId": null,
-              "availability": "Unset"
-            }
-          ],
-          "pointsFor": "",
-          "pointsAgainst": ""
-        },
-        {
-          "id": "disc-1775053549880-0.9747553015243003",
-          "type": "Pairs",
+          "id": "disc-1774939003426-0.9446731430380564",
+          "type": "Fours",
           "assignments": [
             {
               "positionName": "Lead",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "2nd",
+              "playerId": null,
+              "availability": "Unset"
+            },
+            {
+              "positionName": "3rd",
               "playerId": null,
               "availability": "Unset"
             },
@@ -11538,7 +11529,45 @@
       ]
     }
   ],
-  "scorecards": [],
+  "scorecards": [
+    {
+      "id": "sc-1774937986078-0.9534772321624656",
+      "competition": "Club Champs",
+      "selectedType": "Singles",
+      "playByDate": "2026-04-12",
+      "agreedPlayDate": "",
+      "startTime": "",
+      "isHome": true,
+      "teamA": {
+        "id": "cc-1774937986078-A-0.7987159326637865",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": "1",
+            "availability": "Unset"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "teamB": {
+        "id": "cc-1774937986078-B-0.05090834775111486",
+        "type": "Singles",
+        "assignments": [
+          {
+            "positionName": "Skip",
+            "playerId": "2",
+            "availability": "Unset"
+          }
+        ],
+        "pointsFor": "",
+        "pointsAgainst": ""
+      },
+      "isNew": false,
+      "isEditing": false
+    }
+  ],
   "appSettings": {
     "backgroundImage": null,
     "backgroundScale": 1,
