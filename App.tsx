@@ -8,6 +8,7 @@ import PlayerManager from './components/PlayerManager';
 import ClubChamps, { ClubChampsHandle } from './components/ClubChamps';
 import PlayerAvailability from './components/PlayerAvailability';
 import LoginView from './components/LoginView';
+import Dashboard from './components/Dashboard';
 import { LayoutDashboard, Table, UserCircle, Settings, Users, Plus, Shield, X, RefreshCw, Trophy, LogOut, AlertTriangle, Calendar, Image, Upload, Trash2, Check, Download } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -89,10 +90,12 @@ const App: React.FC = () => {
   // UI State
   const [currentView, setCurrentView] = useState<ViewMode>('Member');
   // activeTab now holds either a match ID or 'Players'/'Database'
-  const [activeTab, setActiveTab] = useState<string>(() => {
-      if (matches.length > 0) return matches[0].id;
-      return '';
-  });
+  const [activeTab, setActiveTab] = useState<string>('Dashboard');
+
+  // Save active tab
+  useEffect(() => {
+      localStorage.setItem('bowls_active_tab', activeTab);
+  }, [activeTab]);
 
   // Warning State
   const [upcomingGamesCount, setUpcomingGamesCount] = useState<number>(0);
@@ -175,30 +178,8 @@ const App: React.FC = () => {
 
   // Initialize Data
   const loadData = async () => {
-      setIsSyncing(true);
-      try {
-          // Try Netlify function first, fallback to local API
-          const response = await fetch('/.netlify/functions/sync').catch(() => fetch('/api/github/data'));
-          
-          if (response.ok) {
-              const contentType = response.headers.get("content-type");
-              if (contentType && contentType.includes("application/json")) {
-                  const result = await response.json();
-                  const data = result.data || result; // Handle both Netlify and local API formats
-                  if (data.players) setPlayers(data.players);
-                  if (data.matches) setMatches(data.matches);
-                  if (data.databaseMatches) setDatabaseMatches(data.databaseMatches);
-                  if (data.scorecards) setScorecards(data.scorecards);
-                  if (data.appSettings) setAppSettings(data.appSettings);
-              } else {
-                  console.warn("Received non-JSON response from GitHub sync");
-              }
-          }
-      } catch (error) {
-          console.error("Failed to load data from GitHub:", error);
-      } finally {
-          setIsSyncing(false);
-      }
+      // Data is already initialized from localStorage in the useState initializers
+      console.log("Data loaded from local storage");
   };
 
   useEffect(() => {
@@ -212,30 +193,19 @@ const App: React.FC = () => {
 
   // Save on change
   const saveData = async (manualData?: any) => {
-      setIsSyncing(true);
-      try {
-          const content = manualData || {
-              players,
-              matches,
-              databaseMatches,
-              scorecards,
-              appSettings
-          };
-
-          await fetch('/.netlify/functions/sync', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ content })
-          }).catch(() => fetch('/api/github/data', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ data: content })
-          }));
-      } catch (error) {
-          console.error("Failed to save data to GitHub:", error);
-      } finally {
-          setIsSyncing(false);
-      }
+      const content = manualData || {
+          players,
+          matches,
+          databaseMatches,
+          scorecards,
+          appSettings
+      };
+      
+      localStorage.setItem('bowls_players', JSON.stringify(content.players));
+      localStorage.setItem('bowls_matches', JSON.stringify(content.matches));
+      localStorage.setItem('bowls_database', JSON.stringify(content.databaseMatches));
+      localStorage.setItem('bowls_club_champs', JSON.stringify(content.scorecards));
+      localStorage.setItem('bowls_app_settings', JSON.stringify(content.appSettings));
   };
 
   useEffect(() => {
@@ -301,7 +271,7 @@ const App: React.FC = () => {
               if (firstAvailableMatch) {
                   setActiveTab(firstAvailableMatch.id);
               } else {
-                  setActiveTab('ClubChamps');
+                  setActiveTab('Dashboard');
               }
           }
       }
@@ -395,13 +365,9 @@ const App: React.FC = () => {
     const newMatches = matches.filter(m => m.id !== id);
     setMatches(newMatches);
     
-    // If we deleted the active tab, switch to the first available match or Database
+    // If we deleted the active tab, switch to Dashboard
     if (activeTab === id) {
-        if (newMatches.length > 0) {
-            setActiveTab(newMatches[0].id);
-        } else {
-            setActiveTab('Database');
-        }
+        setActiveTab('Dashboard');
     }
   };
 
@@ -447,7 +413,7 @@ const App: React.FC = () => {
           id: `match-${Date.now()}`
       };
       setMatches([defaultMatch]);
-      setActiveTab(defaultMatch.id);
+      setActiveTab('Dashboard');
       setShowResetConfirm(false);
   };
 
@@ -846,6 +812,21 @@ const App: React.FC = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center mb-8 gap-4">
             <div className="w-full">
                 <div className="flex flex-wrap gap-2 bg-white/90 backdrop-blur-sm p-2 rounded-xl shadow-sm border border-gray-200">
+                    {/* Dashboard Tab */}
+                    <button
+                        onClick={() => setActiveTab('Dashboard')}
+                        className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap border ${
+                            activeTab === 'Dashboard' 
+                            ? 'bg-bowls-darkGreen text-white border-bowls-darkGreen ring-2 ring-bowls-green ring-offset-1' 
+                            : 'bg-white text-gray-500 border-transparent hover:bg-gray-50 hover:text-gray-700'
+                        }`}
+                    >
+                        <LayoutDashboard className="w-4 h-4 mr-2" />
+                        Dashboard
+                    </button>
+
+                    <div className="w-px bg-gray-200 mx-2"></div>
+
                     {/* Match Tabs */}
                     {matches.map(match => {
                         // Hide unconfirmed matches from the main tab bar
@@ -989,7 +970,15 @@ const App: React.FC = () => {
 
         {/* Content Render */}
         <div className="min-h-[500px]">
-            {activeMatch ? (
+            {activeTab === 'Dashboard' ? (
+                <Dashboard 
+                    matches={matches} 
+                    scorecards={scorecards} 
+                    players={players} 
+                    currentUser={currentUser}
+                    onSelectTab={setActiveTab}
+                />
+            ) : activeMatch ? (
                 <MatchEditor 
                     match={activeMatch} 
                     players={players} 

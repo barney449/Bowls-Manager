@@ -24,34 +24,19 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onRequestAccess }) => {
 
     try {
       const endpoint = isLoginMode ? '/api/auth-login' : '/api/auth/signup';
-      const netlifyEndpoint = isLoginMode ? '/.netlify/functions/auth-login' : '/.netlify/functions/auth/signup';
       const body = isLoginMode ? { email, password } : { name, email, password };
 
-      let response;
-      const tryAuth = async (url: string) => {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        
-        // If we got HTML back (likely from a SPA redirect) or a 404, it's not the real API
-        const contentType = res.headers.get('content-type');
-        if (res.status === 404 || (contentType && contentType.includes('text/html'))) {
-          throw new Error('Endpoint not found');
-        }
-        return res;
-      };
+      setIsLoading(true);
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
 
-      try {
-        response = await tryAuth(endpoint);
-      } catch (e) {
-        // Fallback to Netlify function if local API fails or returns HTML
-        try {
-          response = await tryAuth(netlifyEndpoint);
-        } catch (netlifyErr) {
-          throw new Error('Authentication service unavailable. Please check your connection.');
-        }
+      // If we got HTML back (likely from a SPA redirect) or a 404, it's not the real API
+      const contentType = response.headers.get('content-type');
+      if (response.status === 404 || (contentType && contentType.includes('text/html'))) {
+        throw new Error('Authentication service unavailable. Please check your connection.');
       }
 
       let data;
@@ -107,31 +92,16 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onRequestAccess }) => {
     setIsLoading(true);
 
     try {
-      let response;
-      const tryAuth = async (url: string, body: any) => {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        
-        const contentType = res.headers.get('content-type');
-        if (res.status === 404 || (contentType && contentType.includes('text/html'))) {
-          throw new Error('Endpoint not found');
-        }
-        return res;
-      };
-
       const loginBody = { email: demoEmail, password: 'password' };
-      try {
-        response = await tryAuth('/api/auth-login', loginBody);
-      } catch (e) {
-        // Fallback to Netlify function if local API fails
-        try {
-          response = await tryAuth('/.netlify/functions/auth-login', loginBody);
-        } catch (netlifyErr) {
-          throw new Error('Authentication service unavailable. Please check your connection.');
-        }
+      const response = await fetch('/api/auth-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginBody),
+      });
+
+      const contentType = response.headers.get('content-type');
+      if (response.status === 404 || (contentType && contentType.includes('text/html'))) {
+        throw new Error('Authentication service unavailable. Please check your connection.');
       }
 
       let data;

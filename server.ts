@@ -7,7 +7,6 @@ import session from "express-session";
 import { WebSocketServer, WebSocket } from "ws";
 import { createServer } from "http";
 import fs from "fs";
-import { Octokit } from "octokit";
 import bcrypt from "bcryptjs";
 import { MOCK_PLAYERS } from "./constants.js";
 
@@ -92,126 +91,27 @@ async function startServer() {
     }
   }));
 
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN
-  });
-
-  const GITHUB_OWNER = process.env.GITHUB_OWNER;
-  const GITHUB_REPO = process.env.GITHUB_REPO;
-  const GITHUB_BRANCH = (process.env.GITHUB_BRANCH || "main").toLowerCase();
-  const GITHUB_FILE_PATH = process.env.GITHUB_FILE_PATH || "data.json";
   const LOCAL_DATA_FILE = path.join(__dirname, "data.json");
 
-  const getGitHubData = async () => {
+  const getLocalData = () => {
     const fallbackData = { players: MOCK_PLAYERS, matches: [], databaseMatches: [], scorecards: [], appSettings: {} };
-    
-    // Check if local data exists first as a baseline
-    let localData = fallbackData;
     if (fs.existsSync(LOCAL_DATA_FILE)) {
       try {
-        localData = JSON.parse(fs.readFileSync(LOCAL_DATA_FILE, "utf-8"));
+        return JSON.parse(fs.readFileSync(LOCAL_DATA_FILE, "utf-8"));
       } catch (e) {
         console.error("Failed to load local data:", e);
       }
     }
-
-    if (!GITHUB_OWNER || !GITHUB_REPO || !process.env.GITHUB_TOKEN) {
-      console.warn("GitHub configuration missing, using local storage");
-      return localData;
-    }
-
-    try {
-      const response = await octokit.rest.repos.getContent({
-        owner: GITHUB_OWNER,
-        repo: GITHUB_REPO,
-        path: GITHUB_FILE_PATH,
-        ...(GITHUB_BRANCH ? { ref: GITHUB_BRANCH } : {})
-      });
-
-      if ("content" in response.data) {
-        const content = Buffer.from(response.data.content, "base64").toString("utf-8");
-        const parsed = JSON.parse(content);
-        // Ensure mock players are present if not already in GitHub
-        if (!parsed.players || parsed.players.length === 0) {
-            parsed.players = MOCK_PLAYERS;
-        }
-        return parsed;
-      }
-      return localData;
-    } catch (error: any) {
-      console.error("GitHub fetch failed, falling back to local data:", error.message);
-      return localData;
-    }
+    return fallbackData;
   };
 
-  const saveGitHubData = async (data: any) => {
-    // Always save locally as a backup
+  const saveLocalData = (data: any) => {
     try {
       fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(data, null, 2));
     } catch (e) {
       console.error("Failed to save data locally:", e);
     }
-
-    if (!GITHUB_OWNER || !GITHUB_REPO || !process.env.GITHUB_TOKEN) {
-      return; // Skip GitHub if not configured
-    }
-
-    try {
-      let sha: string | undefined;
-      try {
-        const existingFile = await octokit.rest.repos.getContent({
-          owner: GITHUB_OWNER,
-          repo: GITHUB_REPO,
-          path: GITHUB_FILE_PATH,
-          ...(GITHUB_BRANCH ? { ref: GITHUB_BRANCH } : {})
-        });
-        if ("sha" in existingFile.data) {
-          sha = existingFile.data.sha;
-        }
-      } catch (e) {}
-
-      await octokit.rest.repos.createOrUpdateFileContents({
-        owner: GITHUB_OWNER,
-        repo: GITHUB_REPO,
-        path: GITHUB_FILE_PATH,
-        message: "Update bowls data",
-        content: Buffer.from(JSON.stringify(data, null, 2)).toString("base64"),
-        sha,
-        ...(GITHUB_BRANCH ? { branch: GITHUB_BRANCH } : {})
-      });
-    } catch (error: any) {
-      console.error("GitHub save failed:", error.message);
-      // We don't throw here to avoid breaking the app if GitHub is down/misconfigured
-      // since we already saved locally.
-    }
   };
-
-  app.get(["/api/github/data", "/.netlify/functions/sync"], async (req, res) => {
-    try {
-      const data = await getGitHubData();
-      res.json(req.path.includes('sync') ? { data } : data);
-    } catch (error: any) {
-      console.error("Error fetching from GitHub:", error);
-      res.status(error.status || 500).json({ 
-        error: error.message || "Failed to fetch data from GitHub",
-        details: error.response?.data || {}
-      });
-    }
-  });
-
-  app.post(["/api/github/data", "/.netlify/functions/sync"], async (req, res) => {
-    try {
-      const dataToSave = req.path.includes('sync') ? req.body.content : req.body.data;
-      await saveGitHubData(dataToSave);
-      res.json({ success: true });
-    } catch (error: any) {
-      console.error("Error saving to GitHub:", error);
-      res.status(error.status || 500).json({ 
-        error: error.message || "Failed to save data to GitHub",
-        details: error.response?.data || {}
-      });
-    }
-  });
 
   // Auth Routes
   app.post("/api/auth/signup", async (req, res) => {
@@ -221,7 +121,7 @@ async function startServer() {
     }
 
     try {
-      const data = await getGitHubData();
+      const data = getLocalData();
       const players = data.players || [];
 
       if (players.find((p: any) => p.email.toLowerCase() === email.toLowerCase())) {
@@ -249,7 +149,7 @@ async function startServer() {
       };
 
       data.players = [...players, newPlayer];
-      await saveGitHubData(data);
+      saveLocalData(data);
 
       (req.session as any).userId = newPlayer.id;
       res.json({ success: true, user: { id: newPlayer.id, name: newPlayer.name, email: newPlayer.email, role: newPlayer.role } });
@@ -259,66 +159,54 @@ async function startServer() {
     }
   });
 
-    app.post(["/api/auth/login", "/api/auth-login"], async (req, res) => {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return res.status(400).json({ error: "Missing email or password" });
+  app.post(["/api/auth/login", "/api/auth-login"], async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: "Missing email or password" });
+    }
+
+    try {
+      const data = getLocalData();
+      const players = data.players || [];
+      const user = players.find((p: any) => p.email.toLowerCase() === email.toLowerCase());
+
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      try {
-        const data = await getGitHubData();
-        const players = data.players || [];
-        const user = players.find((p: any) => p.email.toLowerCase() === email.toLowerCase());
+      const isBcryptHash = (str: string) => /^\$2[ayb]\$.{56}$/.test(str);
 
-        if (!user) {
-          console.warn(`Login failed: User not found for email ${email}`);
-          return res.status(401).json({ error: "Invalid credentials" });
+      let isMatch = false;
+      if (isBcryptHash(user.password)) {
+        isMatch = await bcrypt.compare(password, user.password);
+      } else {
+        isMatch = password === user.password;
+        if (isMatch) {
+          user.password = await bcrypt.hash(password, 10);
+          saveLocalData(data);
         }
-
-        // Check if the password is a bcrypt hash
-        const isBcryptHash = (str: string) => /^\$2[ayb]\$.{56}$/.test(str);
-
-        let isMatch = false;
-        if (isBcryptHash(user.password)) {
-          isMatch = await bcrypt.compare(password, user.password);
-        } else {
-          // Handle plain text passwords for migration/demo
-          isMatch = password === user.password;
-          
-          // If it's a match, we should probably hash it now for security
-          if (isMatch) {
-              try {
-                  const hashedPassword = await bcrypt.hash(password, 10);
-                  user.password = hashedPassword;
-                  await saveGitHubData(data);
-              } catch (saveError) {
-                  console.error("Failed to update password hash during login:", saveError);
-                  // We still allow login if the password matched, even if saving the hash failed
-              }
-          }
-        }
-
-        if (!isMatch) {
-          console.warn(`Login failed: Password mismatch for email ${email}`);
-          return res.status(401).json({ error: "Invalid credentials" });
-        }
-
-        (req.session as any).userId = user.id;
-        res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-      } catch (error: any) {
-        console.error("Login error:", error);
-        res.status(500).json({ error: `Login failed: ${error.message}` });
       }
-    });
 
-  app.get("/api/auth/me", async (req, res) => {
+      if (!isMatch) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      (req.session as any).userId = user.id;
+      res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+    } catch (error: any) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: `Login failed: ${error.message}` });
+    }
+  });
+
+  app.get("/api/auth/me", (req, res) => {
     const userId = (req.session as any).userId;
     if (!userId) {
       return res.status(401).json({ error: "Not authenticated" });
     }
 
     try {
-      const data = await getGitHubData();
+      const data = getLocalData();
       const user = data.players.find((p: any) => p.id === userId);
       if (!user) {
         return res.status(401).json({ error: "User not found" });
